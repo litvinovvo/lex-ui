@@ -154,8 +154,7 @@ __webpack_require__(/*! core-js/modules/es.array.slice.js */ "./node_modules/cor
 
 // based on https://github.com/mattdiamond/Recorderjs/blob/master/src/recorder.js
 // with a few optimizations including downsampling and trimming quiet samples
-
-/* global Blob self */
+// /* global Blob self */
 
 /* eslint no-restricted-globals: off */
 
@@ -401,10 +400,10 @@ function downsampleTrimBuffer(buffer, rate) {
     Math.max(0, firstNonQuiet - options.quietTrimSlackBack)) / result.length
   );
   */
+  // slice based on quiet threshold and put slack back into the buffer
 
 
-  return options.useTrim ? // slice based on quiet threshold and put slack back into the buffer
-  result.slice(Math.max(0, firstNonQuiet - options.quietTrimSlackBack), Math.min(newLength, lastNonQuiet + options.quietTrimSlackBack)) : result;
+  return options.useTrim ? result.slice(Math.max(0, firstNonQuiet - options.quietTrimSlackBack), Math.min(newLength, lastNonQuiet + options.quietTrimSlackBack)) : result;
 }
 
 /***/ }),

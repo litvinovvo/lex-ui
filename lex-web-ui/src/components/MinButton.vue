@@ -19,6 +19,7 @@
         v-if="minButtonContent"
         v-show="isUiMinimized"
         v-bind:color="toolbarColor"
+        :style="`background-color: ${toolbarColor};`"
         v-on:click.stop="toggleMinimize"
         v-on="tooltipEventHandlers"
         aria-label="show chat window"
@@ -27,7 +28,7 @@
         <v-icon left>
           {{'chat'}}
         </v-icon>
-        {{minButtonContent}}   
+        {{minButtonContent}}
       </v-btn>
       <!-- seperate button for button with text vs w/o -->
       <v-btn
@@ -40,6 +41,7 @@
         v-else
         v-show="isUiMinimized"
         v-bind:color="toolbarColor"
+        :style="`background-color: ${toolbarColor};`"
         v-on:click.stop="toggleMinimize"
         v-on="tooltipEventHandlers"
         aria-label="show chat window"
@@ -107,7 +109,17 @@ export default {
 };
 </script>
 <style>
-  .min-button-content {
-    border-radius: 60px;
+  .min-button-container .min-button-content {
+    border-radius: 50%;
+  }
+  .min-button-container .min-button.btn--floating {
+    height: 62px;
+    width: 62px;
+  }
+  .min-button-container .btn__content > .icon {
+    font-size: 30px;
+    width: 30px;
+    height: 30px;
+    transform: scale(-1, 1);
   }
 </style>

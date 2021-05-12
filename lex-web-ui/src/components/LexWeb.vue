@@ -25,7 +25,7 @@
       <v-container
         class="message-list-container"
         v-bind:class="`toolbar-height-${toolbarHeightClassSuffix}`"
-        fluid pa-0
+        fluid
       >
         <message-list v-if="!isUiMinimized"
         ></message-list>
@@ -118,11 +118,11 @@ export default {
     },
     isMobile() {
       const mobileResolution = 900;
-      return (this.$vuetify.breakpoint.smAndDown &&
-        'navigator' in window && navigator.maxTouchPoints > 0 &&
-        'screen' in window &&
-        (window.screen.height < mobileResolution ||
-          window.screen.width < mobileResolution)
+      return (this.$vuetify.breakpoint.smAndDown
+        && 'navigator' in window && navigator.maxTouchPoints > 0
+        && 'screen' in window
+        && (window.screen.height < mobileResolution
+        || window.screen.width < mobileResolution)
       );
     },
   },
@@ -163,22 +163,17 @@ export default {
         // The Cognito Identity Pool should be a resource in the identified region.
         if (this.$store.state && this.$store.state.config
           && this.$store.state.config.region && this.$store.state.config.cognito.poolId) {
-          const AWSConfigConstructor = (window.AWS && window.AWS.Config) ?
-            window.AWS.Config :
-            AWSConfig;
+          const AWSConfigConstructor = (window.AWS && window.AWS.Config)
+            ? window.AWS.Config : AWSConfig;
 
-          const CognitoConstructor =
-            (window.AWS && window.AWS.CognitoIdentityCredentials) ?
-              window.AWS.CognitoIdentityCredentials :
-              CognitoIdentityCredentials;
+          const CognitoConstructor = (window.AWS && window.AWS.CognitoIdentityCredentials)
+            ? window.AWS.CognitoIdentityCredentials : CognitoIdentityCredentials;
 
-          const LexRuntimeConstructor = (window.AWS && window.AWS.LexRuntime) ?
-            window.AWS.LexRuntime :
-            LexRuntime;
+          const LexRuntimeConstructor = (window.AWS && window.AWS.LexRuntime)
+            ? window.AWS.LexRuntime : LexRuntime;
 
-          const LexRuntimeConstructorV2 = (window.AWS && window.AWS.LexRuntimeV2) ?
-            window.AWS.LexRuntimeV2 :
-            LexRuntimeV2;
+          const LexRuntimeConstructorV2 = (window.AWS && window.AWS.LexRuntimeV2)
+            ? window.AWS.LexRuntimeV2 : LexRuntimeV2;
 
           const credentials = new CognitoConstructor(
             { IdentityPoolId: this.$store.state.config.cognito.poolId },
@@ -208,12 +203,11 @@ export default {
         document.title = this.$store.state.config.ui.pageTitle;
       })
       .then(() => (
-        (this.$store.state.isRunningEmbedded) ?
-          this.$store.dispatch(
+        (this.$store.state.isRunningEmbedded)
+          ? this.$store.dispatch(
             'sendMessageToParentWindow',
             { event: 'ready' },
-          ) :
-          Promise.resolve()
+          ) : Promise.resolve()
       ))
       .then(() => {
         if (this.$store.state.config.ui.saveHistory === true) {
@@ -231,7 +225,7 @@ export default {
         // waiting for credentials to settle down a bit.
         setTimeout(() => this.$store.dispatch('sendInitialUtterance'), 500);
       })
-      .catch((error) => {
+      .catch(error => {
         console.error('could not initialize application while mounting:', error);
       });
   },
@@ -325,7 +319,8 @@ export default {
     messageHandler(evt) {
       const messageType = this.$store.state.config.ui.hideButtonMessageBubble ? 'button' : 'human';
       // security check
-      if (evt.origin !== this.$store.state.config.ui.parentOrigin) {
+      if (evt.origin !== this.$store.state.config.ui.parentOrigin
+        && this.$store.state.config.ui.parentOrigin !== '*') {
         console.warn('ignoring event - invalid origin:', evt.origin);
         return;
       }
@@ -483,8 +478,7 @@ export default {
         .then(() => this.$store.dispatch('getConfigFromParent'))
         // avoid merging an empty config
         .then(config => (
-          (Object.keys(config).length) ?
-            this.$store.dispatch('initConfig', config) : Promise.resolve()
+          (Object.keys(config).length) ? this.$store.dispatch('initConfig', config) : Promise.resolve()
         ))
         .then(() => {
           this.setFocusIfEnabled();
@@ -516,20 +510,26 @@ NOTE: not using var() for different heights due to IE11 compatibility
 */
 .message-list-container {
   position: fixed;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  top: 66px;
+  height: calc(100% - 66px - 123px);
 }
-.message-list-container.toolbar-height-sm {
+/* .message-list-container.toolbar-height-sm {
   top: 56px;
   height: calc(100% - 2 * 56px);
-}
+} */
 /* yes, the height is smaller in mid sizes */
-.message-list-container.toolbar-height-md {
+/* .message-list-container.toolbar-height-md {
   top: 48px;
   height: calc(100% - 2 * 48px);
 }
 .message-list-container.toolbar-height-lg {
   top: 64px;
   height: calc(100% - 2 * 64px);
-}
+} */
 
 #lex-web[ui-minimized] {
   /* make background transparent when running minimized so only

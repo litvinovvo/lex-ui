@@ -158,8 +158,8 @@ export class ConfigLoader {
       url.indexOf('lexWebUiEmbed=true') !== -1) {
       return {
         ui: { parentOrigin },
-        region: config.region,
-        cognito: { region: config.cognito.region },
+        ...config.region && { region: config.region },
+        ...(config.cognito && config.cognito.region) && { cognito: { region: config.cognito.region } },
       };
     }
     return config;

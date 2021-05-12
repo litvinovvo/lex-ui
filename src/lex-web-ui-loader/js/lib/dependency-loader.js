@@ -80,16 +80,18 @@ export class DependencyLoader {
    * Returns a promise that resolves if all dependencies are successfully
    * loaded or rejected if one fails (unless the dependency is optional).
    */
-  load() {
+  load(baseUrl) {
     const types = [
       'css',
       'script',
     ];
 
+    console.log('deps', this.dependencies, baseUrl);
+
     return types.reduce((typePromise, type) => (
       this.dependencies[type].reduce((loadPromise, dependency) => (
         loadPromise.then(() => (
-          DependencyLoader.addDependency(this.useMin, this.baseUrl, type, dependency)
+          DependencyLoader.addDependency(this.useMin, baseUrl || this.baseUrl, type, dependency)
         ))
       ), typePromise)
     ), Promise.resolve());

@@ -48,12 +48,17 @@
       // control how the component configuration and dependencies are retrieved.
       // In this case, we are just passing one option (which doesn't changethe
       // default) for illustration purposes.
+      var href = window.location.href.split("#")[0];
+      var dir = href.substr(0, href.lastIndexOf('/') + 1);
       var loaderOpts = {
+        baseUrl: dir,
         // The following option controls if the local config should be ignored
         // when running this page embedded in an iframe.
         // If set to true, only passes the parentOrigin field when run as an
         // iframe and delegates the config to the parent
         shouldIgnoreConfigWhenEmbedded: true,
+        shouldLoadConfigFromJsonFile: false,
+        shouldLoadConfigFromEvent: false,
 
         // Controls if it should load minimized production dependecies
         // defaults to true for production builds and false in development
@@ -68,6 +73,11 @@
       // When loading the chatbot UI component, you can optionally pass it a
       // configuration object
       var chatbotUiConfig = {
+        ui: {
+          // origin of the parent site where you are including the chatbot UI
+          parentOrigin: '*',
+        },
+        iframe: {},
         lex: {
           sessionAttributes: {
             userAgent: navigator.userAgent

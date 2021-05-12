@@ -1,14 +1,17 @@
 <template>
   <v-toolbar
+    :style="toolbarLinearGradient"
     v-bind:color="toolbarColor"
     app
     dark
     fixed
     v-if="!isUiMinimized"
     v-on="toolbarClickHandler"
+    height="66px"
     v-bind:dense="this.$store.state.isRunningEmbedded && !isUiMinimized"
     v-bind:class="{ minimized: isUiMinimized }"
-    aria-label="Toolbar with sound FX mute button, minimise chat window button and option chat back a step button"
+    aria-label="Toolbar"
+    class="topbar"
   >
     <img
       v-if="toolbarLogo"
@@ -154,6 +157,15 @@ or in the "license" file accompanying this file. This file is distributed on an 
 BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, express or implied. See the
 License for the specific language governing permissions and limitations under the License.
 */
+function hexToRgb(hex) {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+
+  return result ? [
+    parseInt(result[1], 16),
+    parseInt(result[2], 16),
+    parseInt(result[3], 16),
+  ] : null;
+}
 export default {
   name: 'toolbar-container',
   data() {
@@ -207,6 +219,14 @@ export default {
       }
       return null;
     },
+    toolbarGradientColor() {
+      return this.toolbarColor.indexOf('#', 0) !== -1
+        ? `rgba(${hexToRgb(this.toolbarColor).join(',')}, 0.9)` : this.toolbarColor;
+    },
+    toolbarLinearGradient() {
+      return `background-color: #fff;
+        background-image: linear-gradient(176deg, ${this.toolbarColor} 20%, ${this.toolbarGradientColor});`;
+    },
     toolTipMinimize() {
       return this.isUiMinimized ? 'maximize' : 'minimize';
     },
@@ -235,9 +255,9 @@ export default {
     },
     shouldRenderSfxButton() {
       return (
-        this.$store.state.config.ui.enableSFX &&
-        this.$store.state.config.ui.messageSentSFX &&
-        this.$store.state.config.ui.messageReceivedSFX
+        this.$store.state.config.ui.enableSFX
+        && this.$store.state.config.ui.messageSentSFX
+        && this.$store.state.config.ui.messageReceivedSFX
       );
     },
     shouldRenderBackButton() {
@@ -330,8 +350,22 @@ export default {
 };
 </script>
 <style>
+.topbar.toolbar {
+  box-shadow: none !important;
+}
+
+.topbar .icon {
+  opacity: 0.6;
+}
+
 .toolbar-color {
   background-color: #003da5 !important;
+}
+
+.topbar .toolbar__title h1 {
+  font-size: 18px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .nav-buttons {

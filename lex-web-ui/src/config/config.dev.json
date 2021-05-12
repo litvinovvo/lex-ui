@@ -1,16 +1,14 @@
 {
   "cognito": {
-    "poolId": "us-east-1:b1e19043-d194-422a-adb4-2c3d1a90dd1f"
+    "poolId": "us-east-1:70c5ab28-07f3-45c6-af24-0dd1dc012adc"
   },
   "lex": {
-    "v2BotId": "XEFGXXWCHS",
-    "v2BotAliasId": "PRZOQOS9YU",
     "v2BotLocaleId": "en_US",
-    "botName": "XEFGXXWCHS",
-    "botAlias": "$LATEST",
-    "initialText": "You can ask me for help ordering flowers. Just type \"order flowers\" or click on the mic and say it.",
-    "initialSpeechInstruction": "Say 'Order Flowers' to get started.",
-    "initialUtterance": "",
+    "botName": "QnABot_BotaLLSQ",
+    "initialText": "",
+    "initialSpeechInstruction": "",
+    "initialUtterance": "Start",
+    "sessionAttributes": { "areas": "['Elder Abuse', 'Personal Injury']" },
     "retryOnLexPostTextTimeout": false,
     "retryCountPostTextTimeout": 1
   },
@@ -18,9 +16,11 @@
     "voiceId": "Salli"
   },
   "ui": {
+    "hideButtonMessageBubble": true,
     "parentOrigin": "http://localhost:8080",
     "pageTitle": "Order Config Bot",
     "toolbarTitle": "Order Config",
+    "toolbarColor": "#CC311F",
     "enableLogin": true,
     "forceLogin": true,
     "pushInitialTextOnRestart": false,

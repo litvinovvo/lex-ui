@@ -1,7 +1,7 @@
 // based on https://github.com/mattdiamond/Recorderjs/blob/master/src/recorder.js
 // with a few optimizations including downsampling and trimming quiet samples
 
-/* global Blob self */
+// /* global Blob self */
 /* eslint no-restricted-globals: off */
 /* eslint prefer-arrow-callback: ["error", { "allowNamedFunctions": true }] */
 /* eslint no-param-reassign: ["error", { "props": false }] */
@@ -33,7 +33,7 @@ const options = {
   quietTrimSlackBack: 4000,
 };
 
-self.onmessage = (evt) => {
+self.onmessage = evt => {
   switch (evt.data.command) {
     case 'init':
       init(evt.data.config);
@@ -222,11 +222,10 @@ function downsampleTrimBuffer(buffer, rate) {
     Math.max(0, firstNonQuiet - options.quietTrimSlackBack)) / result.length
   );
   */
-  return (options.useTrim) ?
-    // slice based on quiet threshold and put slack back into the buffer
-    result.slice(
+  // slice based on quiet threshold and put slack back into the buffer
+  return (options.useTrim)
+    ? result.slice(
       Math.max(0, firstNonQuiet - options.quietTrimSlackBack),
       Math.min(newLength, lastNonQuiet + options.quietTrimSlackBack)
-    ) :
-    result;
+    ) : result;
 }

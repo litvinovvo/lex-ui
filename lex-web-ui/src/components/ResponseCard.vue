@@ -1,7 +1,8 @@
 <template>
   <v-card>
     <div v-if=shouldDisplayResponseCardTitle>
-      <v-card-title v-if="responseCard.title && responseCard.title.trim()" primary-title class="red lighten-5">
+      <v-card-title v-if="responseCard.title && responseCard.title.trim()"
+        primary-title class="red lighten-5">
         <span class="headline">{{responseCard.title}}</span>
       </v-card-title>
     </div>
@@ -23,8 +24,7 @@
         v-bind:disabled="shouldDisableClickedResponseCardButtons"
         round
         default
-        v-bind:color="button.text.toLowerCase() === 'more' ? '' : 'accent'"
-        class="secondary--text"
+        v-bind:color="button.text.toLowerCase() === 'more' ? '' : 'white'"
       >
         {{button.text}}
       </v-btn>
@@ -70,8 +70,8 @@ export default {
     },
     shouldDisableClickedResponseCardButtons() {
       return (
-        this.$store.state.config.ui.shouldDisableClickedResponseCardButtons &&
-        this.hasButtonBeenClicked
+        this.$store.state.config.ui.shouldDisableClickedResponseCardButtons
+        && this.hasButtonBeenClicked
       );
     },
   },
@@ -111,6 +111,10 @@ export default {
   display: inline-block;
 }
 
+.card__actions {
+  margin-left: -8px;
+}
+
 .card__actions .btn {
   margin: 4px 4px;
   font-size: 1em;
@@ -121,4 +125,17 @@ export default {
   justify-content: center;
   padding-bottom: 0.15em;
 }
+</style>
+<style>
+  .card .btn {
+    text-transform: none;
+  }
+
+  .card .btn {
+    color: #9E9E9E !important;
+    padding: 10px;
+    height: 48px;
+    border: 1px solid #e4e4e4 !important;
+    box-shadow: 4px 4px 20px rgba(76, 118, 224, 0.05) !important;
+  }
 </style>

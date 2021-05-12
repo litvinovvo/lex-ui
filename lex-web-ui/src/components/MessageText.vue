@@ -19,7 +19,8 @@
     v-else-if="message.text && message.type === 'bot'"
     class="message-text"
   >
-    <span class="sr-only">bot says: </span>{{ (shouldStripTags) ? stripTagsFromMessage(message.text) : message.text }}
+  <span class="sr-only">bot says: </span>
+  {{ (shouldStripTags) ? stripTagsFromMessage(message.text) : message.text }}
   </div>
 </template>
 
@@ -99,39 +100,38 @@ export default {
         {
           type: 'web',
           regex: new RegExp(
-            '\\b((?:https?://\\w{1}|www\\.)(?:[\\w-.]){2,256}' +
-            '(?:[\\w._~:/?#@!$&()*+,;=[\'\\]-]){0,256})',
+            '\\b((?:https?://\\w{1}|www\\.)(?:[\\w-.]){2,256}'
+            + '(?:[\\w._~:/?#@!$&()*+,;=[\'\\]-]){0,256})',
             'im',
           ),
           replace: (item) => {
             const url = (!/^https?:\/\//.test(item)) ? `http://${item}` : item;
-            return '<a target="_blank" ' +
-              `href="${encodeURI(url)}">${this.encodeAsHtml(item)}</a>`;
+            return '<a target="_blank" '
+            + `href="${encodeURI(url)}">${this.encodeAsHtml(item)}</a>`;
           },
         },
       ];
       // TODO avoid double HTML encoding when there's more than 1 linkReplacer
+      // splits the message into an array containing content chunks
+      // and links. Content chunks will be the even indexed items in the
+      // array (or empty string when applicable).
+      // Links (if any) will be the odd members of the array since the
+      // regex keeps references.
       return linkReplacers
         .reduce(
-          (message, replacer) =>
-            // splits the message into an array containing content chunks
-            // and links. Content chunks will be the even indexed items in the
-            // array (or empty string when applicable).
-            // Links (if any) will be the odd members of the array since the
-            // regex keeps references.
-            message.split(replacer.regex)
-              .reduce(
-                (messageAccum, item, index, array) => {
-                  let messageResult = '';
-                  if ((index % 2) === 0) {
-                    const urlItem = ((index + 1) === array.length) ?
-                      '' : replacer.replace(array[index + 1]);
-                    messageResult = `${this.encodeAsHtml(item)}${urlItem}`;
-                  }
-                  return messageAccum + messageResult;
-                },
-                '',
-              ),
+          (message, replacer) => message.split(replacer.regex)
+            .reduce(
+              (messageAccum, item, index, array) => {
+                let messageResult = '';
+                if ((index % 2) === 0) {
+                  const urlItem = ((index + 1) === array.length)
+                    ? '' : replacer.replace(array[index + 1]);
+                  messageResult = `${this.encodeAsHtml(item)}${urlItem}`;
+                }
+                return messageAccum + messageResult;
+              },
+              '',
+            ),
           messageText,
         );
     },
@@ -160,6 +160,10 @@ export default {
 </style>
 
 <style>
+.message-text p:last-of-type {
+  margin-bottom: 0;
+}
+
 .sr-only {
   position: absolute !important;
   width: 1px !important;

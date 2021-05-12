@@ -41,7 +41,14 @@ export default {
   },
   computed: {
     messages() {
-      return this.$store.state.messages;
+      // console.log('messages', this.$store.state.messages);
+      return this.$store.state.messages.filter(message => {
+        // hide initial
+        if (message.text === this.$store.state.config.lex.initialUtterance || message.text === '') {
+          return false;
+        }
+        return true;
+      });
     },
     loading() {
       return this.$store.state.lex.isProcessing;
@@ -61,8 +68,8 @@ export default {
   methods: {
     scrollDown() {
       return this.$nextTick(() => {
-        const lastMessageOffset = (this.$el.lastElementChild) ?
-          this.$el.lastElementChild.getBoundingClientRect().height : 0;
+        const lastMessageOffset = (this.$el.lastElementChild)
+          ? this.$el.lastElementChild.getBoundingClientRect().height : 0;
         this.$el.scrollTop = this.$el.scrollHeight - lastMessageOffset;
       });
     },
@@ -72,7 +79,7 @@ export default {
 
 <style scoped>
 .message-list {
-  padding-top: 1rem;
+  /* padding-top: 1rem; */
   overflow-y: auto;
   overflow-x: hidden;
 }

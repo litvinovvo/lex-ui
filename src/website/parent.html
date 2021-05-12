@@ -144,43 +144,55 @@
 
       // The loader constructor supports various configurable options used to
       // control how the component configuration and dependencies are retrieved.
-      var loaderOpts = {
-        // Point the baseUrl option to the the base URL used to download
-        // the chatbot UI files and dependencies.
-        // In this example, the base URL is relative to the root path
-        // You can also use full URLs:
-        //    baseUrl: 'https://iframe-host.example.org/lex-web-ui/'
-        baseUrl: '/',
+    var loaderOpts = {
+      // Point the baseUrl option to the the base URL used to download
+      // the chatbot UI files and dependencies.
+      // In this example, the base URL is relative to the root path
+      // You can also use full URLs:
+      baseUrl: '/',
 
-        // enable receiving chatbot UI config from event
-        // the event is used as an alternative to passing the chatbot
-        // UI via JSON file or via the parameter in the load() function
-        shouldLoadConfigFromEvent: true,
+      // enable receiving chatbot UI config from event
+      // the event is used as an alternative to passing the chatbot
+      // UI via JSON file or via the parameter in the load() function
+      shouldLoadConfigFromEvent: false,
+      shouldLoadConfigFromJsonFile: false,
 
-        // Controls if it should load minimized production dependecies
-        // defaults to true for production builds and false in development
-        shouldLoadMinDeps: true,
-      }
+      // Controls if it should load minimized production dependecies
+      // defaults to true for production builds and false in development
+      shouldLoadMinDeps: true,
+    }
 
-      // ChatBotUiLoader contains the IframeLoader constructor
-      // Instantiate the loader and pass the loader options
-      var iframeLoader = new ChatBotUiLoader.IframeLoader(loaderOpts);
+    // ChatBotUiLoader contains the IframeLoader constructor
+    // Instantiate the loader and pass the loader options
+    var iframeLoader = new ChatBotUiLoader.IframeLoader(loaderOpts);
 
-      // You can override the chatbot UI config by passing a parameter
-      var chatbotUiconfig = {
+    // You can override the chatbot UI config by passing a parameter
+    var chatbotUiconfig = {
+      cognito: {
+        poolId: 'us-east-1:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+        region: 'us-east-1',
+      },
+      lex: {
+        // Lex Bot Name in your account
+        botName: 'xxxxxx',
+        initialText: '',
+        initialUtterance: '',
+      },
       // if the iframe page is hosted on a different site,
       // you should configure the parentOrigin and iframeOrigin
-      /*
-        ui: {
-          // origin of the parent site where you are including the chatbot UI
-          parentOrigin: 'https://mysite.example.org'
-        },
-        iframe: {
-          // origin hosting the HTML file that will be embedded in the iframe
-          iframeOrigin: 'https://iframe-host.example.org'
-        }
-        */
-      };
+      ui: {
+        // origin of the parent site where you are including the chatbot UI
+        parentOrigin: window.location.origin,
+        toolbarColor: 'blue',
+        toolbarTitle: 'Test'
+      },
+      iframe: {
+        // origin hosting the HTML file that will be embedded in the iframe
+        iframeOrigin: window.location.origin,
+        iframeSrcPath: '/index.html#/?lexWebUiEmbed=true',
+        shouldLoadIframeMinimized: true,
+      }
+    };
 
       // load the iframe
       iframeLoader.load(chatbotUiconfig)

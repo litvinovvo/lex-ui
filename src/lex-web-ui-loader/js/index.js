@@ -22,15 +22,31 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
-import { configBase } from './defaults/lex-web-ui';
-import { optionsIframe, optionsFullPage } from './defaults/loader';
-import { dependenciesIframe, dependenciesFullPage } from './defaults/dependencies';
+import {
+  configBase
+} from './defaults/lex-web-ui';
+import {
+  optionsIframe,
+  optionsFullPage
+} from './defaults/loader';
+import {
+  dependenciesIframe,
+  dependenciesFullPage
+} from './defaults/dependencies';
 
 // import from lib
-import { DependencyLoader } from './lib/dependency-loader';
-import { ConfigLoader } from './lib/config-loader';
-import { IframeComponentLoader } from './lib/iframe-component-loader';
-import { FullPageComponentLoader } from './lib/fullpage-component-loader';
+import {
+  DependencyLoader
+} from './lib/dependency-loader';
+import {
+  ConfigLoader
+} from './lib/config-loader';
+import {
+  IframeComponentLoader
+} from './lib/iframe-component-loader';
+import {
+  FullPageComponentLoader
+} from './lib/fullpage-component-loader';
 
 // import CSS
 import '../css/lex-web-ui-fullpage.css';
@@ -47,7 +63,11 @@ function setCustomEventShim() {
 
   function CustomEvent(
     event,
-    params = { bubbles: false, cancelable: false, detail: undefined },
+    params = {
+      bubbles: false,
+      cancelable: false,
+      detail: undefined
+    },
   ) {
     const evt = document.createEvent('CustomEvent');
     evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
@@ -69,7 +89,9 @@ class Loader {
    *   component configa are loaded
    */
   constructor(options) {
-    const { baseUrl } = options;
+    const {
+      baseUrl
+    } = options;
     // polyfill needed for IE11
     setCustomEventShim();
     this.options = options;
@@ -77,7 +99,7 @@ class Loader {
     // append a trailing slash if not present in the baseUrl
     this.options.baseUrl =
       (this.options.baseUrl && baseUrl[baseUrl.length - 1] === '/') ?
-        this.options.baseUrl : `${this.options.baseUrl}/`;
+      this.options.baseUrl : `${this.options.baseUrl}/`;
 
     this.confLoader = new ConfigLoader(this.options);
   }
@@ -87,7 +109,7 @@ class Loader {
     this.config = ConfigLoader.mergeConfig(this.config, configParam);
 
     // load dependencies
-    return this.depLoader.load()
+    return this.depLoader.load(this.options.baseUrl)
       // load dynamic config
       .then(() => this.confLoader.load(this.config))
       // assign and merge dynamic config to this instance config
@@ -108,7 +130,10 @@ export class FullPageLoader extends Loader {
    *   component config are loaded
    */
   constructor(options = {}) {
-    super({ ...optionsFullPage, ...options });
+    super({
+      ...optionsFullPage,
+      ...options
+    });
 
     this.config = configBase;
 
@@ -122,6 +147,7 @@ export class FullPageLoader extends Loader {
     this.compLoader = new FullPageComponentLoader({
       elementId: this.options.elementId,
       config: this.config,
+      baseUrl: this.options.baseUrl,
     });
   }
 
@@ -139,7 +165,10 @@ export class IframeLoader extends Loader {
    *   component config are loaded
    */
   constructor(options = {}) {
-    super({ ...optionsIframe, ...options });
+    super({
+      ...optionsIframe,
+      ...options
+    });
 
     // chatbot UI component config
     this.config = configBase;
@@ -155,6 +184,7 @@ export class IframeLoader extends Loader {
       config: this.config,
       containerClass: this.options.containerClass || 'lex-web-ui',
       elementId: this.options.elementId || 'lex-web-ui',
+      baseUrl: this.options.baseUrl,
     });
   }
 
@@ -176,10 +206,14 @@ export class IframeLoader extends Loader {
    * Merges iframe src path from options and iframe config
    */
   mergeSrcPath(configParam) {
-    const { iframe: iframeConfigFromParam } = configParam;
+    const {
+      iframe: iframeConfigFromParam
+    } = configParam;
     const srcPathFromParam =
       iframeConfigFromParam && iframeConfigFromParam.iframeSrcPath;
-    const { iframe: iframeConfigFromThis } = this.config;
+    const {
+      iframe: iframeConfigFromThis
+    } = this.config;
     const srcPathFromThis =
       iframeConfigFromThis && iframeConfigFromThis.iframeSrcPath;
 

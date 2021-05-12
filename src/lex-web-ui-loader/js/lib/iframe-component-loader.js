@@ -326,6 +326,7 @@ export class IframeComponentLoader {
         this.config.iframe.iframeOrigin :
         window.location.origin;
 
+    console.log('on message from iframe', iframeOrigin, evt.origin, evt);
     // SECURITY: origin check
     if (evt.origin !== iframeOrigin) {
       console.warn('postMessage from invalid origin', evt.origin);
@@ -552,6 +553,7 @@ export class IframeComponentLoader {
 
       // requests credentials from the parent
       getCredentials(evt) {
+        // console.log('get credentials', evt);
         return this.getCredentials()
           .then((creds) => {
             const tcreds = JSON.parse(JSON.stringify(creds));
@@ -681,9 +683,10 @@ export class IframeComponentLoader {
           reject(new Error(`iframe failed to handle message - ${evt.data.error}`));
         }
       };
+      console.log('send message', message, iframeOrigin, messageChannel.port2);
       this.iframeElement.contentWindow.postMessage(
         message,
-        iframeOrigin,
+        '*' || iframeOrigin,
         [messageChannel.port2],
       );
     });

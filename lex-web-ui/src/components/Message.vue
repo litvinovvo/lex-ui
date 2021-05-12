@@ -29,19 +29,25 @@
                   v-if="'text' in message && message.text !== null && message.text.length"
                 ></message-text>
                 <div
-                  v-if="message.id === this.$store.state.messages.length - 1 && isLastMessageFeedback && message.type === 'bot' && botDialogState && showDialogFeedback"
+                  v-if="message.id === this.$store.state.messages.length - 1
+                  && isLastMessageFeedback && message.type === 'bot'
+                  && botDialogState && showDialogFeedback"
                   class="feedback-state"
                 >
                   <v-icon
                     v-on:click="onButtonClick(positiveIntent)"
-                    v-bind:class="{'feedback-icons-positive': !positiveClick, 'positiveClick': positiveClick}"
+                    v-bind:class="{
+                      'feedback-icons-positive': !positiveClick,
+                      'positiveClick': positiveClick }"
                     tabindex="0"
                   >
                     thumb_up
                   </v-icon>
                   <v-icon
                     v-on:click="onButtonClick(negativeIntent)"
-                    v-bind:class="{'feedback-icons-negative': !negativeClick, 'negativeClick': negativeClick}"
+                    v-bind:class="{
+                      'feedback-icons-negative': !negativeClick,
+                      'negativeClick': negativeClick }"
                     tabindex="0"
                   >
                     thumb_down
@@ -69,7 +75,7 @@
                     <v-icon class="play-icon">play_circle_outline</v-icon>
                   </v-btn>
                 </div>
-                 <v-menu offset-y v-if="message.type === 'human'" v-show="showMessageMenu">
+                 <v-menu right offset-y v-if="message.type === 'human'" v-show="showMessageMenu">
                   <v-btn
                     slot="activator"
                     icon
@@ -109,7 +115,7 @@
         v-if="shouldDisplayResponseCard"
         class="response-card"
         d-flex
-        mt-2 mr-2 ml-3
+        mt-2 mr-2
       >
         <response-card
           v-for="(card, index) in message.responseCard.genericAttachments"
@@ -199,18 +205,17 @@ export default {
     },
     shouldDisplayResponseCard() {
       return (
-        this.message.responseCard &&
-        (this.message.responseCard.version === '1' ||
-         this.message.responseCard.version === 1) &&
-        this.message.responseCard.contentType === 'application/vnd.amazonaws.card.generic' &&
-        'genericAttachments' in this.message.responseCard &&
-        this.message.responseCard.genericAttachments instanceof Array
+        this.message.responseCard
+        && (this.message.responseCard.version === '1' || this.message.responseCard.version === 1)
+        && this.message.responseCard.contentType === 'application/vnd.amazonaws.card.generic'
+        && 'genericAttachments' in this.message.responseCard
+        && this.message.responseCard.genericAttachments instanceof Array
       );
     },
     shouldShowAvatarImage() {
       return (
-        this.message.type === 'bot' &&
-        this.botAvatarUrl
+        this.message.type === 'bot'
+        && this.botAvatarUrl
       );
     },
     botAvatarBackground() {
@@ -279,9 +284,11 @@ export default {
       const secsInDay = secsInHr * 24;
       if (dateDiff < 60) {
         return 'Now';
-      } else if (dateDiff < secsInHr) {
+      }
+      if (dateDiff < secsInHr) {
         return `${Math.floor(dateDiff / 60)} min ago`;
-      } else if (dateDiff < secsInDay) {
+      }
+      if (dateDiff < secsInDay) {
         return this.message.date.toLocaleTimeString();
       }
       return this.message.date.toLocaleString();
@@ -289,8 +296,8 @@ export default {
   },
   created() {
     if (this.message.responseCard && 'genericAttachments' in this.message.responseCard) {
-      if (this.message.responseCard.genericAttachments[0].buttons &&
-          this.hideInputFields && !this.$store.state.hasButtons) {
+      if (this.message.responseCard.genericAttachments[0].buttons
+        && this.hideInputFields && !this.$store.state.hasButtons) {
         this.$store.dispatch('toggleHasButtons');
       }
     } else if (this.$store.state.config.ui.hideInputFieldsForButtonResponse) {
@@ -305,6 +312,10 @@ export default {
 <style scoped>
 .smicon {
   font-size: 14px;
+}
+
+.message:first-child {
+  padding-top: 20px;
 }
 
 .message, .message-bubble-column {
@@ -328,28 +339,31 @@ export default {
   border-radius: 24px;
   display: inline-flex;
   font-size: calc(1em + 0.25vmin);
-  padding: 0 12px;
+  padding: 5px 12px;
   width: fit-content;
   align-self: center;
+  color: #6E7A89;
 }
 
 .focusable {
-  box-shadow: 0 0.25px 0.75px rgba(0,0,0,0.12), 0 0.25px 0.5px rgba(0,0,0,0.24);
+  /* box-shadow: 0 0.25px 0.75px rgba(0,0,0,0.12), 0 0.25px 0.5px rgba(0,0,0,0.24); */
   transition: all 0.3s cubic-bezier(.25,.8,.25,1);
   cursor: default;
 }
 
 .focusable:focus {
-  box-shadow: 0 1.25px 3.75px rgba(0,0,0,0.25), 0 1.25px 2.5px rgba(0,0,0,0.22);
+  /* box-shadow: 0 1.25px 3.75px rgba(0,0,0,0.25), 0 1.25px 2.5px rgba(0,0,0,0.22); */
   outline: none;
 }
 
 .message-bot .message-bubble {
-  background-color: #FFEBEE; /* red-50 from material palette */
+  background-color: #F4F6EF; /* red-50 from material palette */
+  border-radius: 0 24px 24px 24px;
 }
 
 .message-human .message-bubble {
-  background-color: #E8EAF6; /* indigo-50 from material palette */
+  background-color: #EFF3F6; /* indigo-50 from material palette */
+  border-radius: 24px 0 24px 24px;
 }
 
 .message-feedback .message-bubble {
