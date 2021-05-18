@@ -8,11 +8,11 @@
   display: none; /* hidden by default changed once iframe is loaded */
   margin-bottom: 0px;
   margin-left: 2px;
-  margin-right: 3vw;
+  margin-right: 1vw;
   margin-top: 2px;
   max-width: 66vw;
   height: 80vh; /* dynamically changed on iframe maximize/minimize */
-  min-width: calc(50vw - 3vw); /* half viewport width minus margin right */
+  min-width: 33vw; /* half viewport width minus margin right */
   position: fixed;
   right: 0;
   z-index: 2147483637; /* max z-index (2147483647) - 10 */

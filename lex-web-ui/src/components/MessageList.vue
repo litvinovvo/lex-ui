@@ -82,6 +82,8 @@ export default {
   /* padding-top: 1rem; */
   overflow-y: auto;
   overflow-x: hidden;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
 }
 
 .message-bot {

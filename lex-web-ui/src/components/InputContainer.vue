@@ -217,7 +217,7 @@ export default {
     },
     playInitialInstruction() {
       const isInitialState = ['', 'Fulfilled', 'Failed']
-        .some((initialState) => (
+        .some(initialState => (
           this.$store.state.lex.dialogState === initialState
         ));
 
@@ -257,7 +257,7 @@ export default {
       return this.setAutoPlay()
         .then(() => this.playInitialInstruction())
         .then(() => this.$store.dispatch('startConversation'))
-        .catch((error) => {
+        .catch(error => {
           console.error('error in startSpeechConversation', error);
           const errorMessage = (this.$store.state.config.ui.showErrorDetails)
             ? ` ${error}` : '';

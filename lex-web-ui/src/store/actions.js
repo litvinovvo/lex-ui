@@ -17,6 +17,7 @@ License for the specific language governing permissions and limitations under th
 
 /* eslint no-console: ["error", { allow: ["info", "warn", "error"] }] */
 /* eslint spaced-comment: ["error", "always", { "exceptions": ["*"] }] */
+/* eslint-disable */
 
 import LexAudioRecorder from '@/lib/lex/recorder';
 import initRecorderHandlers from '@/store/recorder-handlers';

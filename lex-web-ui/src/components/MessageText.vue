@@ -104,7 +104,7 @@ export default {
             + '(?:[\\w._~:/?#@!$&()*+,;=[\'\\]-]){0,256})',
             'im',
           ),
-          replace: (item) => {
+          replace: item => {
             const url = (!/^https?:\/\//.test(item)) ? `http://${item}` : item;
             return '<a target="_blank" '
             + `href="${encodeURI(url)}">${this.encodeAsHtml(item)}</a>`;

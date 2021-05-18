@@ -510,12 +510,9 @@ NOTE: not using var() for different heights due to IE11 compatibility
 */
 .message-list-container {
   position: fixed;
-  padding-left: 12px !important;
-  padding-right: 12px !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
+  padding: 0 !important;
   top: 66px;
-  height: calc(100% - 66px - 123px);
+  height: calc(100% - 66px - 120px);
 }
 /* .message-list-container.toolbar-height-sm {
   top: 56px;
