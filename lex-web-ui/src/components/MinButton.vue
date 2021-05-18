@@ -117,9 +117,9 @@ export default {
     width: 62px;
   }
   .min-button-container .btn__content > .icon {
-    font-size: 30px;
-    width: 30px;
-    height: 30px;
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
     transform: scale(-1, 1);
   }
 </style>

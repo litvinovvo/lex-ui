@@ -35408,7 +35408,7 @@ module.exports = exports;
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "\n.min-button-container .min-button-content {\n  border-radius: 50%;\n}\n.min-button-container .min-button.btn--floating {\n  height: 62px;\n  width: 62px;\n}\n.min-button-container .btn__content > .icon {\n  font-size: 30px;\n  width: 30px;\n  height: 30px;\n  transform: scale(-1, 1);\n}\n", ""]);
+exports.push([module.i, "\n.min-button-container .min-button-content {\n  border-radius: 50%;\n}\n.min-button-container .min-button.btn--floating {\n  height: 62px;\n  width: 62px;\n}\n.min-button-container .btn__content > .icon {\n  font-size: 36px;\n  width: 36px;\n  height: 36px;\n  transform: scale(-1, 1);\n}\n", ""]);
 // Exports
 module.exports = exports;
 
