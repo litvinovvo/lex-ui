@@ -18362,7 +18362,7 @@ License for the specific language governing permissions and limitations under th
       }
     };
   },
-  props: ['textInputPlaceholder', 'initialSpeechInstruction'],
+  props: ['textInputPlaceholder', 'initialSpeechInstruction', 'disabled'],
   components: {
     RecorderStatus: _components_RecorderStatus__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
@@ -18565,6 +18565,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+//
 //
 //
 //
@@ -20546,7 +20547,7 @@ var render = function() {
                 ref: "textInput",
                 attrs: {
                   label: _vm.textInputPlaceholder,
-                  disabled: _vm.isLexProcessing,
+                  disabled: _vm.isLexProcessing || _vm.disabled,
                   id: "text-input",
                   name: "text-input",
                   "single-line": "",
@@ -20776,10 +20777,11 @@ var render = function() {
             1
           )
         : _vm._e(),
-      !_vm.isUiMinimized && !_vm.hasButtons
+      !_vm.isUiMinimized
         ? _c("input-container", {
             ref: "InputContainer",
             attrs: {
+              disabled: _vm.hasButtons,
               "text-input-placeholder": _vm.textInputPlaceholder,
               "initial-speech-instruction": _vm.initialSpeechInstruction
             }
@@ -35300,7 +35302,7 @@ module.exports = exports;
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*\nThe Vuetify toolbar height is based on screen width breakpoints\nThe toolbar can be 48px, 56px and 64px.\nIt is fixed to 48px when using 'dense'\n\nThe message list is placed between the toolbar at the top and input\ncontainer on the bottom. Both the toolbar and the input-container\ndynamically change height based on width breakpoints.\nSo we duplicate the height and substract it from the total height\nof the message list to make it fit between the toolbar and input container\n\nNOTE: not using var() for different heights due to IE11 compatibility\n*/\n.message-list-container {\n  position: fixed;\n  padding: 0 !important;\n  top: 66px;\n  height: calc(100% - 66px - 120px);\n}\n/* .message-list-container.toolbar-height-sm {\n  top: 56px;\n  height: calc(100% - 2 * 56px);\n} */\n/* yes, the height is smaller in mid sizes */\n/* .message-list-container.toolbar-height-md {\n  top: 48px;\n  height: calc(100% - 2 * 48px);\n}\n.message-list-container.toolbar-height-lg {\n  top: 64px;\n  height: calc(100% - 2 * 64px);\n} */\n#lex-web[ui-minimized] {\n  /* make background transparent when running minimized so only\n  the button is shown */\n  background: transparent;\n}\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*\nThe Vuetify toolbar height is based on screen width breakpoints\nThe toolbar can be 48px, 56px and 64px.\nIt is fixed to 48px when using 'dense'\n\nThe message list is placed between the toolbar at the top and input\ncontainer on the bottom. Both the toolbar and the input-container\ndynamically change height based on width breakpoints.\nSo we duplicate the height and substract it from the total height\nof the message list to make it fit between the toolbar and input container\n\nNOTE: not using var() for different heights due to IE11 compatibility\n*/\n.message-list-container {\n  position: fixed;\n  padding: 0 !important;\n  top: 66px;\n  height: calc(100% - 66px - 120px);\n}\n/* .message-list-container.toolbar-height-sm {\n  top: 56px;\n  height: calc(100% - 2 * 56px);\n} */\n/* yes, the height is smaller in mid sizes */\n/* .message-list-container.toolbar-height-md {\n  top: 48px;\n  height: calc(100% - 2 * 48px);\n}\n.message-list-container.toolbar-height-lg {\n  top: 64px;\n  height: calc(100% - 2 * 64px);\n} */\n#lex-web[ui-minimized] {\n  /* make background transparent when running minimized so only\n  the button is shown */\n  background: transparent;\n}\n", ""]);
 // Exports
 module.exports = exports;
 

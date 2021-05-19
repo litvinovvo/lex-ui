@@ -14,7 +14,7 @@
         <v-text-field
           v-bind:label="textInputPlaceholder"
           v-show="shouldShowTextInput"
-          v-bind:disabled="isLexProcessing"
+          v-bind:disabled="isLexProcessing || disabled"
           v-model="textInput"
           v-on:keyup.enter.stop="postTextMessage"
           v-on:focus="onTextFieldFocus"
@@ -121,7 +121,7 @@ export default {
       },
     };
   },
-  props: ['textInputPlaceholder', 'initialSpeechInstruction'],
+  props: ['textInputPlaceholder', 'initialSpeechInstruction', 'disabled'],
   components: {
     RecorderStatus,
   },
