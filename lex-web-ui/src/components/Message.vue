@@ -309,13 +309,14 @@ export default {
 };
 </script>
 
+<style>
+.message:first-child {
+  padding-top: 20px;
+}
+</style>
 <style scoped>
 .smicon {
   font-size: 14px;
-}
-
-.message:first-child {
-  padding-top: 20px;
 }
 
 .message, .message-bubble-column {

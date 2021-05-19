@@ -57,7 +57,7 @@
           v-else
           v-on:click="onMicClick"
           v-on="tooltipEventHandlers"
-          v-bind:disabled="isMicButtonDisabled"
+          v-bind:disabled="isMicButtonDisabled || disabled"
           ref="mic"
           class="icon-color input-button"
           icon
