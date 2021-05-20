@@ -113,13 +113,14 @@ export default {
     border-radius: 50%;
   }
   .min-button-container .min-button.btn--floating {
-    height: 62px;
-    width: 62px;
+    box-shadow: 0 6px 10px 0 rgb(0 0 0 / 12%), 0 1px 18px 0 rgb(0 0 0 / 12%);
+    height: 54px;
+    width: 54px;
   }
   .min-button-container .btn__content > .icon {
-    font-size: 36px;
-    width: 36px;
-    height: 36px;
+    font-size: 28px;
+    width: auto;
+    height: auto;
     transform: scale(-1, 1);
   }
 </style>

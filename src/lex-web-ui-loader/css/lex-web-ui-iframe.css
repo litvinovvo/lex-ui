@@ -1,15 +1,15 @@
 .lex-web-ui-iframe {
-  bottom: 1.5rem;
+  bottom: 10px;
   display: none; /* hidden by default changed once iframe is loaded */
   margin-bottom: 0px;
   margin-left: 2px;
-  margin-right: 1vw;
+  margin-right: 0;
   margin-top: 2px;
   max-width: 66vw;
   height: 80vh; /* dynamically changed on iframe maximize/minimize */
   min-width: 450px; /* half viewport width minus margin right */
   position: fixed;
-  right: 0;
+  right: 10px;
   z-index: 99; /* max z-index (2147483647) - 10 */
 }
 .lex-web-ui-iframe iframe {
@@ -53,7 +53,6 @@ and (max-width: 480px) {
   .lex-web-ui-iframe {
     min-width: 96vw;
     height: 84vh;
-    margin-right: 2vw;
     align-self: center;
   }
 
