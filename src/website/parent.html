@@ -169,22 +169,33 @@
     // You can override the chatbot UI config by passing a parameter
     var chatbotUiconfig = {
       cognito: {
-        poolId: 'us-east-1:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+        poolId: 'us-east-1:70c5ab28-07f3-45c6-af24-0dd1dc012adc',
         region: 'us-east-1',
       },
       lex: {
         // Lex Bot Name in your account
-        botName: 'xxxxxx',
+        botName: 'QnABot_BotaLLSQ',
         initialText: '',
-        initialUtterance: '',
+        initialUtterance: 'Start',
+        sessionAttributes: {
+          areas: JSON.stringify(['Elder Abuse', 'Social Security Disability', "Workers' Compensation",
+            'Personal Injury'
+          ]),
+        }
       },
       // if the iframe page is hosted on a different site,
       // you should configure the parentOrigin and iframeOrigin
       ui: {
         // origin of the parent site where you are including the chatbot UI
         parentOrigin: window.location.origin,
-        toolbarColor: 'blue',
-        toolbarTitle: 'Test'
+        hideButtonMessageBubble: false,
+        pushInitialTextOnRestart: false,
+        shouldDisplayResponseCardTitle: false,
+        showDialogStateIcon: false,
+        toolbarColor: '#C13030',
+        toolbarTitle: 'Civille Law',
+        hideInputFieldsForButtonResponse: false,
+        disableInputFieldsForButtonResponse: true,
       },
       iframe: {
         // origin hosting the HTML file that will be embedded in the iframe

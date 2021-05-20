@@ -35,7 +35,7 @@
     <input-container
       ref="InputContainer"
       v-if="!isUiMinimized"
-      v-bind:disabled="hasButtons"
+      v-bind:has-buttons="hasButtons"
       v-bind:text-input-placeholder="textInputPlaceholder"
       v-bind:initial-speech-instruction="initialSpeechInstruction"
     ></input-container>

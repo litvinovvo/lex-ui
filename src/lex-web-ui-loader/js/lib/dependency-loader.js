@@ -86,8 +86,6 @@ export class DependencyLoader {
       'script',
     ];
 
-    console.log('deps', this.dependencies, baseUrl);
-
     return types.reduce((typePromise, type) => (
       this.dependencies[type].reduce((loadPromise, dependency) => (
         loadPromise.then(() => (

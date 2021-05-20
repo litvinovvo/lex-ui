@@ -41,6 +41,7 @@ export class IframeComponentLoader {
     this.containerElement = null;
     this.credentials = null;
     this.isChatBotReady = false;
+    this.minimizeToggled = false;
 
     this.initIframeMessageHandlers();
   }
@@ -326,7 +327,6 @@ export class IframeComponentLoader {
         this.config.iframe.iframeOrigin :
         window.location.origin;
 
-    console.log('on message from iframe', iframeOrigin, evt.origin, evt);
     // SECURITY: origin check
     if (evt.origin !== iframeOrigin) {
       console.warn('postMessage from invalid origin', evt.origin);
@@ -551,6 +551,10 @@ export class IframeComponentLoader {
         evt.ports[0].postMessage({ event: 'resolve', type: evt.data.event });
       },
 
+      firstInteraction() {
+        IframeComponentLoader.submitAnalyticsEvent('interaction');
+      },
+
       // requests credentials from the parent
       getCredentials(evt) {
         // console.log('get credentials', evt);
@@ -584,6 +588,15 @@ export class IframeComponentLoader {
 
       // sent when minimize button is pressed within the iframe component
       toggleMinimizeUi(evt) {
+        if (!this.minimizeToggled) {
+          if (document.getElementById('lex-web-ui-iframe').classList.contains('lex-web-ui-iframe--minimize')) {
+            IframeComponentLoader.submitAnalyticsEvent('open');
+          } else {
+            IframeComponentLoader.submitAnalyticsEvent('close');
+          }
+        }
+
+        this.minimizeToggled = false;
         this.toggleMinimizeUiClass()
           .then(() => (
             evt.ports[0].postMessage({ event: 'resolve', type: evt.data.event })
@@ -651,6 +664,10 @@ export class IframeComponentLoader {
 
         // relay event to parent
         const stateEvent = new CustomEvent('updatelexstate', { detail: evt.data });
+
+        if (evt.data.state.sessionAttributes.submitted) {
+          IframeComponentLoader.submitAnalyticsEvent('submit');
+        }
         document.dispatchEvent(stateEvent);
       },
     };
@@ -683,7 +700,6 @@ export class IframeComponentLoader {
           reject(new Error(`iframe failed to handle message - ${evt.data.error}`));
         }
       };
-      console.log('send message', message, iframeOrigin, messageChannel.port2);
       this.iframeElement.contentWindow.postMessage(
         message,
         '*' || iframeOrigin,
@@ -765,9 +781,10 @@ export class IframeComponentLoader {
       sendParentReady: () => (
         this.sendMessageToIframe({ event: 'parentReady' })
       ),
-      toggleMinimizeUi: () => (
-        this.sendMessageToIframe({ event: 'toggleMinimizeUi' })
-      ),
+      toggleMinimizeUi: () => {
+        this.sendMessageToIframe({ event: 'toggleMinimizeUi' });
+        this.minimizeToggled = true;
+      },
       postText: message => (
         this.sendMessageToIframe({ event: 'postText', message })
       ),
@@ -794,6 +811,20 @@ export class IframeComponentLoader {
       .then(() => {
         document.dispatchEvent(new CustomEvent('lexWebUiReady'));
       });
+  }
+
+  static submitAnalyticsEvent(event) {
+    window.dataLayer = window.dataLayer || [];
+
+    const eventMap = {
+      interaction: 'CIVILLE_CHAT-conversation_started',
+      submit: 'CIVILLE_CHAT-signup_complete',
+      open: 'CIVILLE_CHAT-widget_opened',
+      close: 'CIVILLE_CHAT-widget_closed',
+    };
+    const { dataLayer } = window;
+
+    dataLayer.push({ event: eventMap[event] });
   }
 }
 

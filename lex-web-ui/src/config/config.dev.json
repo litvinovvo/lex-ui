@@ -30,7 +30,10 @@
     "positiveFeedbackIntent": "Thumbs up",
     "negativeFeedbackIntent": "Thumbs down",
     "helpIntent": "help",
-    "hideInputFieldsForButtonResponse": true,
+    "hideInputFieldsForButtonResponse": false,
+    "disableInputFieldsForButtonResponse": true,
+    "textInputPlaceholder": "Type here or click on the mic...",
+    "textInputPlaceholderDisabled": "Pick one of the options...",
     "backButton": false,
     "messageMenu": true
   },

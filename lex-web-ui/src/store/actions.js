@@ -907,7 +907,6 @@ export default {
           target = window.location.origin;
         }
       }
-      console.log('post message from action', message, target);
       window.parent.postMessage(
         message,
         target,

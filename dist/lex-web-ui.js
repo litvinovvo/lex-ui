@@ -18329,6 +18329,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /*
 Copyright 2017-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
@@ -18362,11 +18364,20 @@ License for the specific language governing permissions and limitations under th
       }
     };
   },
-  props: ['textInputPlaceholder', 'initialSpeechInstruction', 'disabled'],
+  props: ['textInputPlaceholder', 'initialSpeechInstruction', 'hasButtons'],
   components: {
     RecorderStatus: _components_RecorderStatus__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
   computed: {
+    disabled: function disabled() {
+      return this.$store.state.config.ui.disableInputFieldsForButtonResponse && this.hasButtons;
+    },
+    hidden: function hidden() {
+      return this.$store.state.config.ui.hideInputFieldsForButtonResponse && this.hasButtons;
+    },
+    textInputPlaceholderDisabled: function textInputPlaceholderDisabled() {
+      return this.$store.state.config.ui.textInputPlaceholderDisabled || this.textInputPlaceholder;
+    },
     isBotSpeaking: function isBotSpeaking() {
       return this.$store.state.botAudio.isSpeaking;
     },
@@ -18422,6 +18433,9 @@ License for the specific language governing permissions and limitations under th
     },
     shouldShowTextInput: function shouldShowTextInput() {
       return !(this.isBotSpeaking || this.isSpeechConversationGoing);
+    },
+    loading: function loading() {
+      return this.$store.state.lex.isProcessing;
     }
   },
   methods: {
@@ -18439,6 +18453,7 @@ License for the specific language governing permissions and limitations under th
       }
 
       if (!this.isSpeechConversationGoing) {
+        this.processAnalytics();
         return this.startSpeechConversation();
       }
 
@@ -18470,6 +18485,14 @@ License for the specific language governing permissions and limitations under th
       });
       return this.$store.state.isLoggedIn && isInitialState && this.initialSpeechInstruction.length > 0 ? this.$store.dispatch('pollySynthesizeSpeech', this.initialSpeechInstruction) : Promise.resolve();
     },
+    processAnalytics: function processAnalytics() {
+      if (!this.$store.state.isInterationStarted) {
+        this.$store.dispatch('sendMessageToParentWindow', {
+          event: 'firstInteraction'
+        });
+        this.$store.commit('setInteractionStarted');
+      }
+    },
     postTextMessage: function postTextMessage() {
       var _this3 = this;
 
@@ -18480,6 +18503,7 @@ License for the specific language governing permissions and limitations under th
         return Promise.resolve();
       }
 
+      this.processAnalytics();
       var message = {
         type: 'human',
         text: this.textInput
@@ -19373,13 +19397,11 @@ License for the specific language governing permissions and limitations under th
   },
   created: function created() {
     if (this.message.responseCard && 'genericAttachments' in this.message.responseCard) {
-      if (this.message.responseCard.genericAttachments[0].buttons && this.hideInputFields && !this.$store.state.hasButtons) {
+      if (this.message.responseCard.genericAttachments[0].buttons && !this.$store.state.hasButtons) {
         this.$store.dispatch('toggleHasButtons');
       }
-    } else if (this.$store.state.config.ui.hideInputFieldsForButtonResponse) {
-      if (this.$store.state.hasButtons) {
-        this.$store.dispatch('toggleHasButtons');
-      }
+    } else if (this.$store.state.hasButtons) {
+      this.$store.dispatch('toggleHasButtons');
     }
   }
 });
@@ -20132,6 +20154,13 @@ License for the specific language governing permissions and limitations under th
         text: value
       };
       this.$store.dispatch('postTextMessage', message);
+
+      if (!this.$store.state.isInterationStarted) {
+        this.$store.dispatch('sendMessageToParentWindow', {
+          event: 'firstInteraction'
+        });
+        this.$store.commit('setInteractionStarted');
+      }
     }
   }
 });
@@ -20526,131 +20555,150 @@ var render = function() {
         "v-layout",
         { staticClass: "input-container", attrs: { "ma-0": "" } },
         [
-          _c(
-            "v-toolbar",
-            {
-              attrs: {
-                color: "white",
-                dense: this.$store.state.isRunningEmbedded
-              }
-            },
-            [
-              _c("v-text-field", {
-                directives: [
-                  {
-                    name: "show",
-                    rawName: "v-show",
-                    value: _vm.shouldShowTextInput,
-                    expression: "shouldShowTextInput"
-                  }
-                ],
-                ref: "textInput",
-                attrs: {
-                  label: _vm.textInputPlaceholder,
-                  disabled: _vm.isLexProcessing || _vm.disabled,
-                  id: "text-input",
-                  name: "text-input",
-                  "single-line": "",
-                  "hide-details": ""
-                },
-                on: {
-                  keyup: function($event) {
-                    if (
-                      !$event.type.indexOf("key") &&
-                      _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-                    ) {
-                      return null
-                    }
-                    $event.stopPropagation()
-                    return _vm.postTextMessage($event)
-                  },
-                  focus: _vm.onTextFieldFocus,
-                  blur: _vm.onTextFieldBlur
-                },
-                model: {
-                  value: _vm.textInput,
-                  callback: function($$v) {
-                    _vm.textInput = $$v
-                  },
-                  expression: "textInput"
-                }
-              }),
-              _c("recorder-status", {
-                directives: [
-                  {
-                    name: "show",
-                    rawName: "v-show",
-                    value: !_vm.shouldShowTextInput,
-                    expression: "!shouldShowTextInput"
-                  }
-                ]
-              }),
-              _c(
-                "v-tooltip",
+          !_vm.hidden
+            ? _c(
+                "v-toolbar",
                 {
-                  ref: "tooltip",
                   attrs: {
-                    activator: ".input-button",
-                    "content-class": "tooltip-custom",
-                    left: ""
-                  },
-                  model: {
-                    value: _vm.shouldShowTooltip,
-                    callback: function($$v) {
-                      _vm.shouldShowTooltip = $$v
-                    },
-                    expression: "shouldShowTooltip"
+                    color: "white",
+                    dense: this.$store.state.isRunningEmbedded
                   }
                 },
                 [
-                  _c("span", { attrs: { id: "input-button-tooltip" } }, [
-                    _vm._v(_vm._s(_vm.inputButtonTooltip))
-                  ])
-                ]
-              ),
-              _vm.shouldShowSendButton
-                ? _c(
-                    "v-btn",
-                    _vm._g(
+                  _c("v-text-field", {
+                    directives: [
                       {
-                        ref: "send",
-                        staticClass: "icon-color input-button",
-                        attrs: {
-                          disabled: _vm.isLexProcessing,
-                          icon: "",
-                          "aria-label": "Send Message"
-                        },
-                        on: { click: _vm.postTextMessage }
-                      },
-                      _vm.tooltipEventHandlers
-                    ),
-                    [_c("v-icon", { attrs: { medium: "" } }, [_vm._v("send")])],
-                    1
-                  )
-                : _c(
-                    "v-btn",
-                    _vm._g(
-                      {
-                        ref: "mic",
-                        staticClass: "icon-color input-button",
-                        attrs: {
-                          disabled: _vm.isMicButtonDisabled || _vm.disabled,
-                          icon: ""
-                        },
-                        on: { click: _vm.onMicClick }
-                      },
-                      _vm.tooltipEventHandlers
-                    ),
-                    [
-                      _c("v-icon", { attrs: { medium: "" } }, [
-                        _vm._v(_vm._s(_vm.micButtonIcon))
-                      ])
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.shouldShowTextInput,
+                        expression: "shouldShowTextInput"
+                      }
                     ],
-                    1
-                  )
-            ],
-            1
-          ),
+                    ref: "textInput",
+                    attrs: {
+                      label: _vm.disabled
+                        ? _vm.textInputPlaceholderDisabled
+                        : _vm.textInputPlaceholder,
+                      disabled:
+                        _vm.isLexProcessing || _vm.disabled || _vm.loading,
+                      id: "text-input",
+                      name: "text-input",
+                      "single-line": "",
+                      "hide-details": ""
+                    },
+                    on: {
+                      keyup: function($event) {
+                        if (
+                          !$event.type.indexOf("key") &&
+                          _vm._k(
+                            $event.keyCode,
+                            "enter",
+                            13,
+                            $event.key,
+                            "Enter"
+                          )
+                        ) {
+                          return null
+                        }
+                        $event.stopPropagation()
+                        return _vm.postTextMessage($event)
+                      },
+                      focus: _vm.onTextFieldFocus,
+                      blur: _vm.onTextFieldBlur
+                    },
+                    model: {
+                      value: _vm.textInput,
+                      callback: function($$v) {
+                        _vm.textInput = $$v
+                      },
+                      expression: "textInput"
+                    }
+                  }),
+                  _c("recorder-status", {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: !_vm.shouldShowTextInput,
+                        expression: "!shouldShowTextInput"
+                      }
+                    ]
+                  }),
+                  _c(
+                    "v-tooltip",
+                    {
+                      ref: "tooltip",
+                      attrs: {
+                        activator: ".input-button",
+                        "content-class": "tooltip-custom",
+                        left: ""
+                      },
+                      model: {
+                        value: _vm.shouldShowTooltip,
+                        callback: function($$v) {
+                          _vm.shouldShowTooltip = $$v
+                        },
+                        expression: "shouldShowTooltip"
+                      }
+                    },
+                    [
+                      _c("span", { attrs: { id: "input-button-tooltip" } }, [
+                        _vm._v(_vm._s(_vm.inputButtonTooltip))
+                      ])
+                    ]
+                  ),
+                  _vm.shouldShowSendButton
+                    ? _c(
+                        "v-btn",
+                        _vm._g(
+                          {
+                            ref: "send",
+                            staticClass: "icon-color input-button",
+                            attrs: {
+                              disabled: _vm.isLexProcessing,
+                              icon: "",
+                              "aria-label": "Send Message"
+                            },
+                            on: { click: _vm.postTextMessage }
+                          },
+                          _vm.tooltipEventHandlers
+                        ),
+                        [
+                          _c("v-icon", { attrs: { medium: "" } }, [
+                            _vm._v("send")
+                          ])
+                        ],
+                        1
+                      )
+                    : _c(
+                        "v-btn",
+                        _vm._g(
+                          {
+                            ref: "mic",
+                            staticClass: "icon-color input-button",
+                            attrs: {
+                              disabled:
+                                _vm.isMicButtonDisabled ||
+                                _vm.isLexProcessing ||
+                                _vm.disabled ||
+                                _vm.loading,
+                              icon: ""
+                            },
+                            on: { click: _vm.onMicClick }
+                          },
+                          _vm.tooltipEventHandlers
+                        ),
+                        [
+                          _c("v-icon", { attrs: { medium: "" } }, [
+                            _vm._v(_vm._s(_vm.micButtonIcon))
+                          ])
+                        ],
+                        1
+                      )
+                ],
+                1
+              )
+            : _vm._e(),
           _c("div", { staticClass: "branding" }, [
             _vm._v(" Powered by "),
             _c(
@@ -20784,7 +20832,7 @@ var render = function() {
         ? _c("input-container", {
             ref: "InputContainer",
             attrs: {
-              disabled: _vm.hasButtons,
+              "has-buttons": _vm.hasButtons,
               "text-input-placeholder": _vm.textInputPlaceholder,
               "initial-speech-instruction": _vm.initialSpeechInstruction
             }
@@ -35287,7 +35335,7 @@ exports.constants = {
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "\n.input-wrapper {\n  margin-bottom: 25px;\n  padding-right: 20px;\n  padding-left: 20px;\n}\n.input-container {\n  /* make footer same height as dense toolbar */\n  min-height: 48px;\n  align-items: center;\n  justify-content: center;\n  flex-direction: column;\n}\n.input-container .toolbar {\n  border: 1px solid #E9E9E9 !important;\n  border-radius: 8px;\n  box-shadow: none;\n}\n.input-container .input-group__details {\n  display: none;\n}\n.input-container .btn {\n  color: #BDC8D1 !important;\n}\n.input-container .branding {\n  margin-top: 20px;\n  display: flex;\n  align-items: center;\n  color: #B0B0B0;\n}\n.input-container .branding svg {\n  margin-left: 5px;\n}\n", ""]);
+exports.push([module.i, "\n.input-container .input-group label {\n    color: rgba(0,0,0,.6) !important;\n}\n.input-container .input-group--disabled label {\n    color: rgba(0,0,0,.3) !important;\n}\n.input-container .btn.input-button {\n  color: #000 !important;\n  opacity: 0.5;\n}\n.input-wrapper {\n  margin-bottom: 25px;\n  padding-right: 20px;\n  padding-left: 20px;\n}\n.input-container {\n  /* make footer same height as dense toolbar */\n  min-height: 48px;\n  align-items: center;\n  justify-content: center;\n  flex-direction: column;\n}\n.input-container .toolbar {\n  border: 1px solid #E9E9E9 !important;\n  border-radius: 8px;\n  box-shadow: none;\n}\n.input-container .input-group__details {\n  display: none;\n}\n.input-container .btn {\n  color: #BDC8D1 !important;\n}\n.input-container .branding {\n  margin-top: 20px;\n  display: flex;\n  align-items: center;\n  color: #B0B0B0;\n}\n.input-container .branding svg {\n  margin-left: 5px;\n}\n", ""]);
 // Exports
 module.exports = exports;
 
@@ -35341,7 +35389,7 @@ module.exports = exports;
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "\n.smicon[data-v-61d2d687] {\n  font-size: 14px;\n}\n.message[data-v-61d2d687], .message-bubble-column[data-v-61d2d687] {\n  flex: 0 0 auto;\n}\n.message[data-v-61d2d687], .message-bubble-row[data-v-61d2d687] {\n  max-width: 80vw;\n}\n.bot-avatar[data-v-61d2d687] {\n  align-self: center;\n  border-radius: 50%;\n  min-width: calc(2.5em + 1.5vmin);\n  min-height: calc(2.5em + 1.5vmin);\n  align-self: flex-start;\n  margin-right: 4px;\n}\n.message-bubble[data-v-61d2d687] {\n  border-radius: 24px;\n  display: inline-flex;\n  font-size: calc(1em + 0.25vmin);\n  padding: 5px 12px;\n  width: -webkit-fit-content;\n  width: -moz-fit-content;\n  width: fit-content;\n  align-self: center;\n  color: #6E7A89;\n}\n.focusable[data-v-61d2d687] {\n  /* box-shadow: 0 0.25px 0.75px rgba(0,0,0,0.12), 0 0.25px 0.5px rgba(0,0,0,0.24); */\n  transition: all 0.3s cubic-bezier(.25,.8,.25,1);\n  cursor: default;\n}\n.focusable[data-v-61d2d687]:focus {\n  /* box-shadow: 0 1.25px 3.75px rgba(0,0,0,0.25), 0 1.25px 2.5px rgba(0,0,0,0.22); */\n  outline: none;\n}\n.message-bot .message-bubble[data-v-61d2d687] {\n  background-color: #F4F6EF; /* red-50 from material palette */\n  border-radius: 0 24px 24px 24px;\n}\n.message-human .message-bubble[data-v-61d2d687] {\n  background-color: #EFF3F6; /* indigo-50 from material palette */\n  border-radius: 24px 0 24px 24px;\n}\n.message-feedback .message-bubble[data-v-61d2d687] {\n  background-color: #E8EAF6;\n}\n.dialog-state[data-v-61d2d687] {\n  display: inline-flex;\n}\n.icon.dialog-state-ok[data-v-61d2d687] {\n  color: green;\n}\n.icon.dialog-state-fail[data-v-61d2d687] {\n  color: red;\n}\n.play-icon[data-v-61d2d687] {\n  font-size: 2em;\n}\n.feedback-state[data-v-61d2d687] {\n  display: inline-flex;\n  align-self: center;\n}\n.icon.feedback-icons-positive[data-v-61d2d687]{\n  color: grey;\n  /* color: #E8EAF6; */\n  /* color: green; */\n  padding: .125em;\n}\n.positiveClick[data-v-61d2d687]{\n  color: green;\n  padding: .125em;\n}\n.negativeClick[data-v-61d2d687]{\n  color: red;\n  padding: .125em;\n}\n.icon.feedback-icons-positive[data-v-61d2d687]:hover{\n  color:green;\n}\n.icon.feedback-icons-negative[data-v-61d2d687]{\n  /* color: #E8EAF6; */\n  color: grey;\n  padding: .125em;\n}\n.icon.feedback-icons-negative[data-v-61d2d687]:hover{\n  color: red;\n}\n.response-card[data-v-61d2d687] {\n  justify-content: center;\n  width: 85vw;\n}\n.no-point[data-v-61d2d687] {\n  pointer-events: none;\n}\n", ""]);
+exports.push([module.i, "\n.smicon[data-v-61d2d687] {\n  font-size: 14px;\n}\n.message[data-v-61d2d687], .message-bubble-column[data-v-61d2d687] {\n  flex: 0 0 auto;\n}\n.message[data-v-61d2d687], .message-bubble-row[data-v-61d2d687] {\n  max-width: 80vw;\n}\n.bot-avatar[data-v-61d2d687] {\n  align-self: center;\n  border-radius: 50%;\n  min-width: calc(2.5em + 1.5vmin);\n  min-height: calc(2.5em + 1.5vmin);\n  align-self: flex-start;\n  margin-right: 4px;\n}\n.message-bubble[data-v-61d2d687] {\n  border-radius: 24px;\n  display: inline-flex;\n  font-size: calc(1em + 0.25vmin);\n  padding: 5px 12px;\n  width: -webkit-fit-content;\n  width: -moz-fit-content;\n  width: fit-content;\n  align-self: center;\n  color: #3b3e42;\n}\n.focusable[data-v-61d2d687] {\n  /* box-shadow: 0 0.25px 0.75px rgba(0,0,0,0.12), 0 0.25px 0.5px rgba(0,0,0,0.24); */\n  transition: all 0.3s cubic-bezier(.25,.8,.25,1);\n  cursor: default;\n}\n.focusable[data-v-61d2d687]:focus {\n  /* box-shadow: 0 1.25px 3.75px rgba(0,0,0,0.25), 0 1.25px 2.5px rgba(0,0,0,0.22); */\n  outline: none;\n}\n.message-bot .message-bubble[data-v-61d2d687] {\n  background-color: #F4F6EF; /* red-50 from material palette */\n  border-radius: 0 24px 24px 24px;\n}\n.message-human .message-bubble[data-v-61d2d687] {\n  background-color: #EFF3F6; /* indigo-50 from material palette */\n  border-radius: 24px 0 24px 24px;\n}\n.message-feedback .message-bubble[data-v-61d2d687] {\n  background-color: #E8EAF6;\n}\n.dialog-state[data-v-61d2d687] {\n  display: inline-flex;\n}\n.icon.dialog-state-ok[data-v-61d2d687] {\n  color: green;\n}\n.icon.dialog-state-fail[data-v-61d2d687] {\n  color: red;\n}\n.play-icon[data-v-61d2d687] {\n  font-size: 2em;\n}\n.feedback-state[data-v-61d2d687] {\n  display: inline-flex;\n  align-self: center;\n}\n.icon.feedback-icons-positive[data-v-61d2d687]{\n  color: grey;\n  /* color: #E8EAF6; */\n  /* color: green; */\n  padding: .125em;\n}\n.positiveClick[data-v-61d2d687]{\n  color: green;\n  padding: .125em;\n}\n.negativeClick[data-v-61d2d687]{\n  color: red;\n  padding: .125em;\n}\n.icon.feedback-icons-positive[data-v-61d2d687]:hover{\n  color:green;\n}\n.icon.feedback-icons-negative[data-v-61d2d687]{\n  /* color: #E8EAF6; */\n  color: grey;\n  padding: .125em;\n}\n.icon.feedback-icons-negative[data-v-61d2d687]:hover{\n  color: red;\n}\n.response-card[data-v-61d2d687] {\n  justify-content: center;\n  width: 85vw;\n}\n.no-point[data-v-61d2d687] {\n  pointer-events: none;\n}\n", ""]);
 // Exports
 module.exports = exports;
 
@@ -35485,7 +35533,7 @@ module.exports = exports;
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "\n.card .btn {\n  text-transform: none;\n}\n.card .btn {\n  color: #9E9E9E !important;\n  padding: 10px;\n  height: 48px;\n  border: 1px solid #e4e4e4 !important;\n  box-shadow: 4px 4px 20px rgba(76, 118, 224, 0.05) !important;\n}\n", ""]);
+exports.push([module.i, "\n.card .btn {\n  text-transform: none;\n}\n.card .btn {\n  color: #676767 !important;\n  padding: 10px;\n  height: 48px;\n  border: 1px solid #e4e4e4 !important;\n  box-shadow: 4px 4px 20px rgba(76, 118, 224, 0.05) !important;\n}\n", ""]);
 // Exports
 module.exports = exports;
 
@@ -35503,7 +35551,7 @@ module.exports = exports;
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "\n.topbar.toolbar {\n  box-shadow: none !important;\n}\n.topbar .icon {\n  opacity: 0.6;\n}\n.toolbar-color {\n  background-color: #003da5 !important;\n}\n.topbar .toolbar__title h1 {\n  font-size: 18px;\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n.nav-buttons {\n  padding: 0;\n  margin-left: 8px !important;\n}\n.nav-button-prev {\n  padding: 0;\n  margin: 0;\n}\n", ""]);
+exports.push([module.i, "\n.topbar.toolbar {\n  box-shadow: none !important;\n}\n.topbar .icon {\n  opacity: 0.7;\n}\n.toolbar-color {\n  background-color: #003da5 !important;\n}\n.topbar .toolbar__title h1 {\n  font-size: 18px;\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n.nav-buttons {\n  padding: 0;\n  margin-left: 8px !important;\n}\n.nav-button-prev {\n  padding: 0;\n  margin: 0;\n}\n", ""]);
 // Exports
 module.exports = exports;
 
@@ -86158,7 +86206,6 @@ var recorder;
         }
       }
 
-      console.log('post message from action', message, target);
       window.parent.postMessage(message, target, [messageChannel.port2]);
     });
   },
@@ -86803,6 +86850,9 @@ License for the specific language governing permissions and limitations under th
     }
 
     state.lex.isPostTextRetry = bool;
+  },
+  setInteractionStarted: function setInteractionStarted(state) {
+    state.isInterationStarted = true;
   }
 });
 
@@ -87085,6 +87135,7 @@ License for the specific language governing permissions and limitations under th
     isRecording: false,
     silentRecordingCount: 0
   },
+  isInterationStarted: false,
   isRunningEmbedded: false,
   // am I running in an iframe?
   isSFXOn: _config__WEBPACK_IMPORTED_MODULE_2__["config"].ui ? !!_config__WEBPACK_IMPORTED_MODULE_2__["config"].ui.enableSFX && !!_config__WEBPACK_IMPORTED_MODULE_2__["config"].ui.messageSentSFX && !!_config__WEBPACK_IMPORTED_MODULE_2__["config"].ui.messageReceivedSFX : false,

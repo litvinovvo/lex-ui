@@ -86,6 +86,14 @@ export default {
       };
 
       this.$store.dispatch('postTextMessage', message);
+
+      if (!this.$store.state.isInterationStarted) {
+        this.$store.dispatch(
+          'sendMessageToParentWindow',
+          { event: 'firstInteraction' },
+        );
+        this.$store.commit('setInteractionStarted');
+      }
     },
   },
 };
@@ -132,7 +140,7 @@ export default {
   }
 
   .card .btn {
-    color: #9E9E9E !important;
+    color: #676767 !important;
     padding: 10px;
     height: 48px;
     border: 1px solid #e4e4e4 !important;

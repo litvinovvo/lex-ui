@@ -5,6 +5,7 @@
       class="input-container"
     >
       <v-toolbar
+        v-if="!hidden"
         color="white"
         v-bind:dense="this.$store.state.isRunningEmbedded"
       >
@@ -12,9 +13,9 @@
           using v-show instead of v-if to make recorder-status transition work
         -->
         <v-text-field
-          v-bind:label="textInputPlaceholder"
+          v-bind:label="disabled ? textInputPlaceholderDisabled : textInputPlaceholder"
           v-show="shouldShowTextInput"
-          v-bind:disabled="isLexProcessing || disabled"
+          v-bind:disabled="isLexProcessing || disabled || loading"
           v-model="textInput"
           v-on:keyup.enter.stop="postTextMessage"
           v-on:focus="onTextFieldFocus"
@@ -57,7 +58,8 @@
           v-else
           v-on:click="onMicClick"
           v-on="tooltipEventHandlers"
-          v-bind:disabled="isMicButtonDisabled || disabled"
+          v-bind:disabled="isMicButtonDisabled
+          || isLexProcessing || disabled || loading"
           ref="mic"
           class="icon-color input-button"
           icon
@@ -121,11 +123,20 @@ export default {
       },
     };
   },
-  props: ['textInputPlaceholder', 'initialSpeechInstruction', 'disabled'],
+  props: ['textInputPlaceholder', 'initialSpeechInstruction', 'hasButtons'],
   components: {
     RecorderStatus,
   },
   computed: {
+    disabled() {
+      return this.$store.state.config.ui.disableInputFieldsForButtonResponse && this.hasButtons;
+    },
+    hidden() {
+      return this.$store.state.config.ui.hideInputFieldsForButtonResponse && this.hasButtons;
+    },
+    textInputPlaceholderDisabled() {
+      return this.$store.state.config.ui.textInputPlaceholderDisabled || this.textInputPlaceholder;
+    },
     isBotSpeaking() {
       return this.$store.state.botAudio.isSpeaking;
     },
@@ -180,6 +191,9 @@ export default {
     shouldShowTextInput() {
       return !(this.isBotSpeaking || this.isSpeechConversationGoing);
     },
+    loading() {
+      return this.$store.state.lex.isProcessing;
+    },
   },
   methods: {
     onInputButtonHoverEnter() {
@@ -194,6 +208,8 @@ export default {
         return this.$store.dispatch('interruptSpeechConversation');
       }
       if (!this.isSpeechConversationGoing) {
+        this.processAnalytics();
+
         return this.startSpeechConversation();
       }
 
@@ -229,6 +245,15 @@ export default {
         )
         : Promise.resolve();
     },
+    processAnalytics() {
+      if (!this.$store.state.isInterationStarted) {
+        this.$store.dispatch(
+          'sendMessageToParentWindow',
+          { event: 'firstInteraction' },
+        );
+        this.$store.commit('setInteractionStarted');
+      }
+    },
     postTextMessage() {
       this.onInputButtonHoverLeave();
       this.textInput = this.textInput.trim();
@@ -236,6 +261,8 @@ export default {
       if (!this.textInput.length) {
         return Promise.resolve();
       }
+
+      this.processAnalytics();
 
       const message = {
         type: 'human',
@@ -287,6 +314,18 @@ export default {
 };
 </script>
 <style>
+.input-container .input-group label {
+    color: rgba(0,0,0,.6) !important;
+}
+.input-container .input-group--disabled label {
+    color: rgba(0,0,0,.3) !important;
+}
+
+.input-container .btn.input-button {
+  color: #000 !important;
+  opacity: 0.5;
+}
+
 .input-wrapper {
   margin-bottom: 25px;
   padding-right: 20px;

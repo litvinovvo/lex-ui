@@ -297,13 +297,11 @@ export default {
   created() {
     if (this.message.responseCard && 'genericAttachments' in this.message.responseCard) {
       if (this.message.responseCard.genericAttachments[0].buttons
-        && this.hideInputFields && !this.$store.state.hasButtons) {
+        && !this.$store.state.hasButtons) {
         this.$store.dispatch('toggleHasButtons');
       }
-    } else if (this.$store.state.config.ui.hideInputFieldsForButtonResponse) {
-      if (this.$store.state.hasButtons) {
-        this.$store.dispatch('toggleHasButtons');
-      }
+    } else if (this.$store.state.hasButtons) {
+      this.$store.dispatch('toggleHasButtons');
     }
   },
 };
@@ -343,7 +341,7 @@ export default {
   padding: 5px 12px;
   width: fit-content;
   align-self: center;
-  color: #6E7A89;
+  color: #3b3e42;
 }
 
 .focusable {

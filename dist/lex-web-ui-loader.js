@@ -75680,7 +75680,6 @@ var DependencyLoader = /*#__PURE__*/function () {
       var _this = this;
 
       var types = ['css', 'script'];
-      console.log('deps', this.dependencies, baseUrl);
       return types.reduce(function (typePromise, type) {
         return _this.dependencies[type].reduce(function (loadPromise, dependency) {
           return loadPromise.then(function () {
@@ -76530,6 +76529,7 @@ var IframeComponentLoader = /*#__PURE__*/function () {
     this.containerElement = null;
     this.credentials = null;
     this.isChatBotReady = false;
+    this.minimizeToggled = false;
     this.initIframeMessageHandlers();
   }
   /**
@@ -76814,8 +76814,7 @@ var IframeComponentLoader = /*#__PURE__*/function () {
   }, {
     key: "onMessageFromIframe",
     value: function onMessageFromIframe(evt) {
-      var iframeOrigin = 'iframe' in this.config && typeof this.config.iframe.iframeOrigin === 'string' ? this.config.iframe.iframeOrigin : window.location.origin;
-      console.log('on message from iframe', iframeOrigin, evt.origin, evt); // SECURITY: origin check
+      var iframeOrigin = 'iframe' in this.config && typeof this.config.iframe.iframeOrigin === 'string' ? this.config.iframe.iframeOrigin : window.location.origin; // SECURITY: origin check
 
       if (evt.origin !== iframeOrigin) {
         console.warn('postMessage from invalid origin', evt.origin);
@@ -77054,6 +77053,9 @@ var IframeComponentLoader = /*#__PURE__*/function () {
             type: evt.data.event
           });
         },
+        firstInteraction: function firstInteraction() {
+          IframeComponentLoader.submitAnalyticsEvent('interaction');
+        },
         // requests credentials from the parent
         getCredentials: function getCredentials(evt) {
           // console.log('get credentials', evt);
@@ -77083,6 +77085,15 @@ var IframeComponentLoader = /*#__PURE__*/function () {
         },
         // sent when minimize button is pressed within the iframe component
         toggleMinimizeUi: function toggleMinimizeUi(evt) {
+          if (!this.minimizeToggled) {
+            if (document.getElementById('lex-web-ui-iframe').classList.contains('lex-web-ui-iframe--minimize')) {
+              IframeComponentLoader.submitAnalyticsEvent('open');
+            } else {
+              IframeComponentLoader.submitAnalyticsEvent('close');
+            }
+          }
+
+          this.minimizeToggled = false;
           this.toggleMinimizeUiClass().then(function () {
             return evt.ports[0].postMessage({
               event: 'resolve',
@@ -77163,6 +77174,11 @@ var IframeComponentLoader = /*#__PURE__*/function () {
           var stateEvent = new CustomEvent('updatelexstate', {
             detail: evt.data
           });
+
+          if (evt.data.state.sessionAttributes.submitted) {
+            IframeComponentLoader.submitAnalyticsEvent('submit');
+          }
+
           document.dispatchEvent(stateEvent);
         }
       };
@@ -77199,8 +77215,6 @@ var IframeComponentLoader = /*#__PURE__*/function () {
             reject(new Error("iframe failed to handle message - ".concat(evt.data.error)));
           }
         };
-
-        console.log('send message', message, iframeOrigin, messageChannel.port2);
 
         _this10.iframeElement.contentWindow.postMessage(message, '*' || false, [messageChannel.port2]);
       });
@@ -77301,9 +77315,11 @@ var IframeComponentLoader = /*#__PURE__*/function () {
           });
         },
         toggleMinimizeUi: function toggleMinimizeUi() {
-          return _this12.sendMessageToIframe({
+          _this12.sendMessageToIframe({
             event: 'toggleMinimizeUi'
           });
+
+          _this12.minimizeToggled = true;
         },
         postText: function postText(message) {
           return _this12.sendMessageToIframe({
@@ -77364,6 +77380,22 @@ var IframeComponentLoader = /*#__PURE__*/function () {
       }
 
       return true;
+    }
+  }, {
+    key: "submitAnalyticsEvent",
+    value: function submitAnalyticsEvent(event) {
+      window.dataLayer = window.dataLayer || [];
+      var eventMap = {
+        interaction: 'CIVILLE_CHAT-conversation_started',
+        submit: 'CIVILLE_CHAT-signup_complete',
+        open: 'CIVILLE_CHAT-widget_opened',
+        close: 'CIVILLE_CHAT-widget_closed'
+      };
+      var _window = window,
+          dataLayer = _window.dataLayer;
+      dataLayer.push({
+        event: eventMap[event]
+      });
     }
   }]);
 

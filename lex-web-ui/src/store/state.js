@@ -17,8 +17,7 @@ License for the specific language governing permissions and limitations under th
 import { config } from '@/config';
 
 export default {
-  version: (process.env.PACKAGE_VERSION) ?
-    process.env.PACKAGE_VERSION : '0.0.0',
+  version: (process.env.PACKAGE_VERSION) ? process.env.PACKAGE_VERSION : '0.0.0',
   lex: {
     acceptFormat: 'audio/ogg',
     dialogState: '',
@@ -31,10 +30,10 @@ export default {
     message: '',
     responseCard: null,
     sessionAttributes: (
-      config.lex &&
-      config.lex.sessionAttributes &&
-      typeof config.lex.sessionAttributes === 'object'
-    ) ? { ...config.lex.sessionAttributes } : {},
+      config.lex
+      && config.lex.sessionAttributes
+      && typeof config.lex.sessionAttributes === 'object')
+      ? { ...config.lex.sessionAttributes } : {},
     slotToElicit: '',
     slots: {},
   },
@@ -44,10 +43,10 @@ export default {
   polly: {
     outputFormat: 'ogg_vorbis',
     voiceId: (
-      config.polly &&
-      config.polly.voiceId &&
-      typeof config.polly.voiceId === 'string'
-    ) ? `${config.polly.voiceId}` : 'Joanna',
+      config.polly
+      && config.polly.voiceId
+      && typeof config.polly.voiceId === 'string')
+      ? `${config.polly.voiceId}` : 'Joanna',
   },
   botAudio: {
     canInterrupt: false,
@@ -67,9 +66,10 @@ export default {
     silentRecordingCount: 0,
   },
 
+  isInterationStarted: false,
   isRunningEmbedded: false, // am I running in an iframe?
-  isSFXOn: (config.ui) ? (!!config.ui.enableSFX &&
-    !!config.ui.messageSentSFX && !!config.ui.messageReceivedSFX) : false,
+  isSFXOn: (config.ui) ? (!!config.ui.enableSFX
+    && !!config.ui.messageSentSFX && !!config.ui.messageReceivedSFX) : false,
   isUiMinimized: false, // when running embedded, is the iframe minimized?
   isEnableLogin: false, // true when a login/logout menu should be displayed
   isForceLogin: false, // true when a login/logout menu should be displayed
