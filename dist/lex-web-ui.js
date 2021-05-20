@@ -35551,7 +35551,7 @@ module.exports = exports;
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "\n.topbar.toolbar {\n  box-shadow: none !important;\n}\n.topbar .icon {\n  opacity: 0.7;\n}\n.toolbar-color {\n  background-color: #003da5 !important;\n}\n.topbar .toolbar__title h1 {\n  font-size: 18px;\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n.nav-buttons {\n  padding: 0;\n  margin-left: 8px !important;\n}\n.nav-button-prev {\n  padding: 0;\n  margin: 0;\n}\n", ""]);
+exports.push([module.i, "\n.topbar.toolbar {\n  box-shadow: none !important;\n}\n.topbar .icon {\n  opacity: 0.7;\n}\n.toolbar-color {\n  background-color: #003da5 !important;\n}\n.topbar .toolbar__title h1 {\n  font-size: 21px;\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n.nav-buttons {\n  padding: 0;\n  margin-left: 8px !important;\n}\n.nav-button-prev {\n  padding: 0;\n  margin: 0;\n}\n", ""]);
 // Exports
 module.exports = exports;
 

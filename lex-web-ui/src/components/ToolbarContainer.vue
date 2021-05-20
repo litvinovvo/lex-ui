@@ -363,7 +363,7 @@ export default {
 }
 
 .topbar .toolbar__title h1 {
-  font-size: 18px;
+  font-size: 21px;
   padding-top: 10px;
   padding-bottom: 10px;
 }
