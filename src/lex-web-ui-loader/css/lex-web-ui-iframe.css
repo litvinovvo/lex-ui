@@ -10,9 +10,8 @@
   min-width: 450px; /* half viewport width minus margin right */
   position: fixed;
   right: 0;
-  z-index: 2147483637; /* max z-index (2147483647) - 10 */
+  z-index: 99; /* max z-index (2147483647) - 10 */
 }
-
 .lex-web-ui-iframe iframe {
   box-shadow: 0 15px 50px 0 rgba(0, 0, 0, 0.4);
   border-radius: 10px;

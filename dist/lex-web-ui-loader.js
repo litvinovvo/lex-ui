@@ -77274,10 +77274,15 @@ var IframeComponentLoader = /*#__PURE__*/function () {
         } else if (localStorage.getItem("".concat(_this11.config.cognito.appUserPoolClientId, "lastUiIsMinimized")) && localStorage.getItem("".concat(_this11.config.cognito.appUserPoolClientId, "lastUiIsMinimized")) === 'false') {
           _this11.api.ping();
         }
-      }) // display UI
-      .then(function () {
+      }).then(function () {
+        return new Promise(function (res) {
+          return setTimeout(function () {
+            return res();
+          }, 250);
+        });
+      }).then(function () {
         return _this11.toggleShowUiClass();
-      });
+      }); // display UI
     }
     /**
      * Event based API handler

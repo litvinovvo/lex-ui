@@ -753,8 +753,8 @@ export class IframeComponentLoader {
           this.api.ping();
         }
       })
-      // display UI
-      .then(() => this.toggleShowUiClass());
+      .then(() => new Promise(res => setTimeout(() => res(), 250)))
+      .then(() => this.toggleShowUiClass()); // display UI
   }
 
   /**
