@@ -77175,7 +77175,7 @@ var IframeComponentLoader = /*#__PURE__*/function () {
             detail: evt.data
           });
 
-          if (evt.data.state.sessionAttributes.submitted) {
+          if (evt.data.state.sessionAttributes.qnabot_qid.indexOf('finish') !== -1) {
             IframeComponentLoader.submitAnalyticsEvent('submit');
           }
 
