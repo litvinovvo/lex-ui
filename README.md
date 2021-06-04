@@ -2,6 +2,7 @@
 It is the clone of [AWS Sample repository](https://github.com/aws-samples/aws-lex-web-ui) at version 0.18.0.
 
 Changes that was done in the repository:
+
 * Now it is possible to use [wildcard](https://bitbucket.org/lincolnlabs/aws-lex-web-ui/src/bacf8f606c499c4c485826e0cd14eb4348495e48/src/website/index.html#lines-78) for IFrame communications, so we can setup the chat on any website.
 * Design changes (done roughly due to limited time).
 * Additional options to disable input field on cards with buttons response.
@@ -19,6 +20,7 @@ Go throug setup process and got some system with Kibana/Elastic stack for statis
 TODO: add QnABot config to the repository
 
 Changes that was done over the stack:
+
 * Elastic nodes decreased to 1 from 4 to reduce costs.
 * ELICIT_RESPONSE_MAX_RETRIES reduced to 1 from 3 in the QnABot Admin.
 * Created additional lambdas for QnABot service. TODO: rename lambdas/add sources to the repo
