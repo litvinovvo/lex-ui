@@ -40,10 +40,10 @@ pipelines:
             caches:
               - node
             script:
-              - npm install
+              - npm install --prefix lex-web-ui && npm install
+              - npm run build:lib-prod --prefix lex-web-ui && npm run build-prod
               # CI=true in default variables for Bitbucket Pipelines https://support.atlassian.com/bitbucket-cloud/docs/variables-in-pipelines/
               # - npm test
-              - npm run build
             artifacts:
               - dist/**
         # - step:

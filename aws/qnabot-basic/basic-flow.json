@@ -1,0 +1,163 @@
+﻿{
+  "qna": [
+    {
+      "qid": "51.chaining.demo.extra",
+      "a": "Thank you. If you would like to talk now, please call us at {{SessionAttributes.phone}}.",
+      "alt": {
+        "ssml": "<speak>Thank you. If you would like to talk now, please call us at {{SessionAttributes.phone}}.</speak>",
+        "markdown": "Thank you. If you would like to talk now, please call us at {{SessionAttributes.phone}}."
+      },
+      "rp": "Thank you. If you would like to talk now, please call us at {{SessionAttributes.phone}}.",
+      "elicitResponse": {
+        "responsebot_hook": "QNAFreeText",
+        "response_sessionattr_namespace": "demo.last"
+      },
+      "conditionalChaining": "Lambda::QNABasicExitRouter",
+      "type": "qna",
+      "q": [
+        "Thank you / Thanks / Bye / Goodbye / Exit / Close"
+      ]
+    },
+    {
+      "qid": "34.chaining.demo.email",
+      "a": "Lastly, can I get your email address?",
+      "alt": {
+        "ssml": "<speak>Lastly, can I get your email address?</speak>",
+        "markdown": "Lastly, can I get your email address?"
+      },
+      "rp": "Lastly, can I get your email address?",
+      "elicitResponse": {
+        "responsebot_hook": "QNACustomEmail",
+        "response_sessionattr_namespace": "demo.email"
+      },
+      "conditionalChaining": "Lambda::QNAEmailRouter",
+      "type": "qna",
+      "q": [
+        "BasicEmail"
+      ]
+    },
+    {
+      "qid": "50.chaining.demo.finish",
+      "a": "Thank you! One of our professionals will be in touch shortly.",
+      "alt": {
+        "ssml": "<speak>Thank you! One of our professionals will be in touch shortly.</speak>",
+        "markdown": "Thank you! One of our professionals will be in touch shortly."
+      },
+      "rp": "Thank you! One of our professionals will be in touch shortly.",
+      "l": "QNAProcessData",
+      "elicitResponse": {
+        "responsebot_hook": "QNAFreeText",
+        "response_sessionattr_namespace": "demo.last"
+      },
+      "conditionalChaining": "Lambda::QNABasicExitRouter",
+      "type": "qna",
+      "q": [
+        "BasicFinish"
+      ]
+    },
+    {
+      "qid": "33.chaining.demo.phone",
+      "a": "Okay, great. Can I get your phone number with area code?",
+      "alt": {
+        "ssml": "<speak>Okay, great. Can I get your phone number with area code?</speak>",
+        "markdown": "Okay, great. Can I get your phone number with area code?"
+      },
+      "rp": "Okay, great. Can I get your phone number with area code?",
+      "elicitResponse": {
+        "responsebot_hook": "QNACustomPhone",
+        "response_sessionattr_namespace": "demo.phone"
+      },
+      "conditionalChaining": "Lambda::QNAPhoneRouter",
+      "type": "qna",
+      "q": [
+        "BasicPhone"
+      ]
+    },
+    {
+      "qid": "32.chaining.demo.name",
+      "a": "Okay. Can you give me your First Name and Last Name please.",
+      "alt": {
+        "ssml": "<speak>Okay. Can you give me your First Name and Last Name please.</speak>",
+        "markdown": "Okay. Can you give me your First Name and Last Name please."
+      },
+      "rp": "Okay. Can you give me your First Name and Last Name please.",
+      "elicitResponse": {
+        "responsebot_hook": "QNAName",
+        "response_sessionattr_namespace": "demo.name"
+      },
+      "conditionalChaining": "Lambda::QNANameRouter",
+      "type": "qna",
+      "q": [
+        "BasicName"
+      ]
+    },
+    {
+      "qid": "52.chaining.demo.restart",
+      "a": "Sorry, I could not understand. Enter \"help\" to start again.",
+      "alt": {
+        "ssml": "<speak>Sorry, I could not understand. Enter \"help\" to start again.</speak>",
+        "markdown": "Sorry, I could not understand. Enter \"help\" to start again."
+      },
+      "rp": "Sorry, I could not understand. Enter \"help\" to start again.",
+      "elicitResponse": {
+        "responsebot_hook": "QNAFreeText",
+        "response_sessionattr_namespace": "demo.last"
+      },
+      "conditionalChaining": "Lambda::QNABasicExitRouter",
+      "type": "qna",
+      "q": [
+        "BasicRestart"
+      ]
+    },
+    {
+      "qid": "01.chaining.demo.lambda",
+      "a": "What do you need help with today? Select one of the following.",
+      "alt": {
+        "ssml": "<speak>What do you need help with today? Select one of the following.</speak>",
+        "markdown": "What do you need help with today? Select one of the following."
+      },
+      "rp": "What do you need help with today? Select one of the following.",
+      "l": "QNAGenerateAreas",
+      "elicitResponse": {
+        "responsebot_hook": "QNAFreeText",
+        "response_sessionattr_namespace": "demo.service"
+      },
+      "conditionalChaining": "(SessionAttributes.areas.some(area => area.toLowerCase() === SessionAttributes.demo.service.FreeText.toLowerCase())) ? 'BasicContact' : 'Start / Help / Get Started / Hi / Go'",
+      "type": "qna",
+      "q": [
+        "Start / Help / Get Started / Hi / Go"
+      ]
+    },
+    {
+      "qid": "20.chaining.demo.contact",
+      "a": "Okay, great. We have handled thousands of {{SessionAttributes.demo.service.FreeText}} cases. Can a professional contact you today to speak further about your case?",
+      "alt": {
+        "ssml": "<speak>Okay, great. We have handled thousands of {{SessionAttributes.demo.service.FreeText}} cases. Can a professional contact you today to speak further about your case?</speak>",
+        "markdown": "Okay, great. We have handled thousands of {{SessionAttributes.demo.service.FreeText}} cases. Can a professional contact you today to speak further about your case?"
+      },
+      "rp": "Okay, great. We have handled thousands of {{SessionAttributes.demo.service.FreeText}} cases. Can a professional contact you today to speak further about your case?",
+      "r": {
+        "title": "Yes or No",
+        "buttons": [
+          {
+            "text": "Yes",
+            "value": "Yes"
+          },
+          {
+            "text": "No",
+            "value": "No"
+          }
+        ]
+      },
+      "elicitResponse": {
+        "responsebot_hook": "QNAYesNo",
+        "response_sessionattr_namespace": "demo.contact"
+      },
+      "conditionalChaining": "Lambda::QNAContactRouter",
+      "type": "qna",
+      "q": [
+        "BasicContact"
+      ]
+    }
+  ]
+}
