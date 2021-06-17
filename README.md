@@ -49,5 +49,5 @@ Go throug setup process and got some system with Kibana/Elastic stack for statis
 
 ### Current setup
 
-Amazon enter point: [lincoln.awsapps.com/start#/](lincoln.awsapps.com/start#/)
-QnABot designer app: [https://cygpuxtfyf.execute-api.us-east-1.amazonaws.com/prod/pages/designer](https://cygpuxtfyf.execute-api.us-east-1.amazonaws.com/prod/pages/designer) (user: Admin, password: sugo11Bot$)
+* Amazon enter point: [lincoln.awsapps.com/start#/](lincoln.awsapps.com/start#/)
+* QnABot designer app: [https://cygpuxtfyf.execute-api.us-east-1.amazonaws.com/prod/pages/designer](https://cygpuxtfyf.execute-api.us-east-1.amazonaws.com/prod/pages/designer) (user: Admin, password: sugo11Bot$)
