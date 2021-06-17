@@ -46,3 +46,8 @@ Go throug setup process and got some system with Kibana/Elastic stack for statis
 * Rename questions Id's in the QnABot Admin from, for example 01.chaining.demo.lambda to  01.civille.basic.start.
 * Rename namespace for variables from demo to basic (it requires to update lambda's code)
 * Remove Elastic dependency (currently some internal code relies on Elastic availability)
+
+### Current setup
+
+Amazon enter point: [lincoln.awsapps.com/start#/](lincoln.awsapps.com/start#/)
+QnABot designer app: [https://cygpuxtfyf.execute-api.us-east-1.amazonaws.com/prod/pages/designer](https://cygpuxtfyf.execute-api.us-east-1.amazonaws.com/prod/pages/designer) (user: Admin, password: sugo11Bot$)
