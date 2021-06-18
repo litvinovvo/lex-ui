@@ -64,6 +64,7 @@ export const dependenciesFullPage = {
     {
       name: 'lex-web-ui-loader',
       url: './lex-web-ui-loader.css',
+      canUseMin: true,
     },
   ],
 };
